@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Remove="Pdfs\**" />
+		<EmbeddedResource Remove="Pdfs\**" />
+		<None Remove="Pdfs\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AngleSharp" />
+		<PackageReference Include="Lazy.Captcha.Core" />
+		<PackageReference Include="Lazy.SlideCaptcha.Core" />
+		<PackageReference Include="Magick.NET-Q16-AnyCPU" />
+		<PackageReference Include="QRCoder" />
+		<PackageReference Include="SixLabors.Fonts" />
+		<PackageReference Include="SixLabors.ImageSharp" />
+		<PackageReference Include="SixLabors.ImageSharp.Drawing" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Magicube.Core.Extension\Magicube.Core.Extension.csproj" />
+		<ProjectReference Include="..\Magicube.Net\Magicube.Net.csproj" />
+	</ItemGroup>
+
+</Project>

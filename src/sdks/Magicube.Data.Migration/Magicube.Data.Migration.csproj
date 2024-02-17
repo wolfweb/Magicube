@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+	<Version>$(DataVersion)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentMigrator" />
+    <PackageReference Include="FluentMigrator.Abstractions" />
+    <PackageReference Include="FluentMigrator.Runner" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Magicube.Data.EFCore.Abstractions\Magicube.Data.EFCore.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

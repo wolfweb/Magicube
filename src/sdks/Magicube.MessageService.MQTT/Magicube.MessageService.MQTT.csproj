@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MQTTnet" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Magicube.Core.Extension\Magicube.Core.Extension.csproj" />
+    <ProjectReference Include="..\Magicube.MessageService\Magicube.MessageService.csproj" />
+  </ItemGroup>
+
+</Project>

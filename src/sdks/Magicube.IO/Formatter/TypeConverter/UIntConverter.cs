@@ -1,0 +1,18 @@
+﻿using System;
+using Magicube.IO.Streams;
+using Magicube.IO.Types;
+
+namespace Magicube.IO.TypeConverter {
+    internal class UIntConverter : BaseTypeConverter<uint> {
+        protected override void SerializeInternal(uint obj, SerializationStream stream) {
+            byte[] data = BitConverter.GetBytes(obj);
+            stream.Write(data);
+        }
+
+        protected override uint DeserializeInternal(DeserializationStream stream, Type sourceType) {
+            return stream.ReadUInt();
+        }
+
+        public override SerializedType Type => SerializedType.Uint;
+    }
+}

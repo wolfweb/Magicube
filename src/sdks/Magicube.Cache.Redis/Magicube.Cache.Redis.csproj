@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StackExchange.Redis" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Magicube.Core.Extension\Magicube.Core.Extension.csproj" />
+    <ProjectReference Include="..\Magicube.Cache.Abstractions\Magicube.Cache.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

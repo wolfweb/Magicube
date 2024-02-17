@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+	<TargetFrameworks>net6.0;netcoreapp3.1;</TargetFrameworks>
+	<RuntimeIdentifiers>win7-x64;linux-x64</RuntimeIdentifiers>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>10</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<PackageReference Include="IKVM" Version="8.2.1" />
+	<PackageReference Include="IKVM.Maven.Sdk" Version="1.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+	<IkvmReference Include="jars\sfnttool.jar">
+	  <AssemblyName>sfnttool</AssemblyName>
+	  <AssemblyVersion>1.0.0</AssemblyVersion>
+	  <Debug>true</Debug>
+	</IkvmReference>
+  </ItemGroup>
+</Project>

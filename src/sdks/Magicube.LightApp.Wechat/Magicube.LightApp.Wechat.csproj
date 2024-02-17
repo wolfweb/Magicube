@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+  </PropertyGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\Magicube.Cache.Abstractions\Magicube.Cache.Abstractions.csproj" />
+    <ProjectReference Include="..\Magicube.Core\Magicube.Core.csproj" />
+    <ProjectReference Include="..\Magicube.LightApp.Abstractions\Magicube.LightApp.Abstractions.csproj" />
+    <ProjectReference Include="..\Magicube.Net\Magicube.Net.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<PackageReference Include="Senparc.Weixin.AspNet" />
+	<PackageReference Include="Senparc.Weixin.WxOpen" />
+  </ItemGroup>
+</Project>

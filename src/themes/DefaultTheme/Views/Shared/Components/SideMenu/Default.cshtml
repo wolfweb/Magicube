@@ -1,0 +1,50 @@
+﻿@using Magicube.Web.Navigation
+@using System.Text
+
+@model IEnumerable<MenuItem>
+
+@functions{
+    public IHtmlContent RenderChildren(IEnumerable<MenuItem> menus) {
+        var builder = new StringBuilder("<ul class=\"nav nav-treeview\">");
+
+        foreach (var menu in menus) {
+            builder.Append("<li class=\"nav-item\">");
+            builder.Append($"<a href=\"{menu.Href}\" class=\"nav-link {(menu.IsActived ? "active" : "")}\">");
+            builder.Append($"<i class=\"nav-icon {menu.Icon}\"></i>");
+            builder.Append($"<p>{menu.Text}");
+            if (menu.Items.Count > 0) { 
+                builder.Append($"<i class=\"right fas fa-angle-left\"></i>");
+            }
+            builder.Append("</p>");
+            builder.Append("</a>");
+
+            if (menu.Items.Count > 0) {
+                builder.Append(RenderChildren(menu.Items));
+            }
+
+            builder.Append("</li>");
+        }
+
+        builder.Append("</ul>");
+        return new HtmlString(builder.ToString());
+    }
+}
+
+<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+    @foreach (var item in Model) {
+        <li class="nav-item @(item.IsOpened ? "menu-open" : "")">
+            <a class="nav-link @(item.IsActived? "active": "")" href="@item.Href">
+                <i class="nav-icon fas @item.Icon"></i>
+                <p>
+                    @item.Text
+                    @if (item.Items.Count > 0) {
+                        <i class="right fas fa-angle-left"></i>
+                    }
+                </p>
+            </a>
+            @if(item.Items.Count>0){
+                @RenderChildren(item.Items)
+            }
+        </li>
+    }
+</ul>

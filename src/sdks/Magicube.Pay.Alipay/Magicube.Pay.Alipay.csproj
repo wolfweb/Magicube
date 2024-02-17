@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>$(CommonTargetFrameworks)</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Essensoft.Paylink.Alipay" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Magicube.Pay.Abstractions\Magicube.Pay.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

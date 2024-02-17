@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+	<TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\sdks\Magicube.Storage.Aliyun\Magicube.Storage.Aliyun.csproj" />
+    <ProjectReference Include="..\..\sdks\Magicube.Storage.Tencent\Magicube.Storage.Tencent.csproj" />
+    <ProjectReference Include="..\..\sdks\Magicube.Storage.Upyun\Magicube.Storage.Upyun.csproj" />
+    <ProjectReference Include="..\..\sdks\Magicube.Web.UI.Abstractions\Magicube.Web.UI.Abstractions.csproj" />
+    <ProjectReference Include="..\..\sdks\Magicube.Web.Abstractions\Magicube.Web.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\_ViewImports.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+
+
+</Project>

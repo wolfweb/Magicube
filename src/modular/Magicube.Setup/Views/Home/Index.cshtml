@@ -1,0 +1,117 @@
+﻿@model SetupViewModel
+
+@inject IOptions<RequestLocalizationOptions> LocalizerOptions
+
+@{
+    SetLayout("~/Views/_Layout.cshtml");
+}
+
+<div class="page-header text-center">
+    <h1>@L["系统初始化设置"]</h1>
+</div>
+<p class="lead text-center">@L["这是Magicube系统页面。请填写以下信息，然后按提交完成安装过程"]</p>
+
+<form class="form-horizontal" asp-controller="Home" asp-action="Index" method="post">
+    <span asp-validation-summary="ValidationSummary.All" class="text-danger"></span>
+
+    <div class="form-group col-md-6" asp-validation-class-for="SiteName">
+        <div>
+            <label asp-for="SiteName">@L["系统的名字"]</label>
+            <input asp-for="SiteName" class="form-control" autofocus required />
+            <span asp-validation-for="SiteName" class="text-danger">@L["系统名字需要填写"]</span>
+            <span class="text-muted form-text small">@L["系统名字将显示在页面访问标题中."]</span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="DatabaseProvider" >@L["支持的数据库"]:</label>
+        <div class="col-sm-10">
+            <select asp-for="DatabaseProvider" type="text" class="form-control" id="DatabaseProvider" name="DatabaseProvider">
+                <option value="">@L["选择数据引擎"]</option>
+                @foreach(var provider in Model.DatabaseProviders) {
+                    <option value="@provider.Name" data-connection-string-sample="@L["数据库连接示例：{0}", provider.ExampleConnectionString]">@provider.Name</option>
+                }
+            </select>
+            <span asp-validation-for="DatabaseProvider" class="text-danger"></span>
+        </div>
+    </div>
+    <div id="databaseInfo" class="DatabaseInfo">
+        <hr />
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="TablePrefix">@L["表前缀"]:</label>
+            <div class="col-sm-10">
+                <input asp-for="TablePrefix" type="text" class="form-control" placeholder="@L["表前缀"]">
+                <span asp-validation-for="TablePrefix" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="DatabaseHost">@L["连接字符串"]:</label>
+            <div class="col-sm-10">
+                <input asp-for="ConnectionString" type="password" class="form-control" >
+                <span asp-validation-for="ConnectionString" class="text-danger"></span>
+                <span id="connectionStringHint" class="text-muted form-text small"></span>
+            </div>
+        </div>
+    </div>
+
+    <fieldset>
+        <legend>@L["超级管理员"]</legend>
+        <span class="text-muted form-text small">@L["超级管理员拥有所有操作权限."]</span>
+        <div class="row">
+            <div class="form-group col-md-6" asp-validation-class-for="UserName">
+                <label asp-for="UserName">@L["用户名"]</label>
+                <input asp-for="UserName" class="form-control" required />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6" asp-validation-class-for="Email">
+                <label for="Email">@L["Email"]</label>
+                <input asp-for="Email" class="form-control" type="email" required />
+                <span asp-validation-for="Email" class="text-danger">@L["email地址无效."]</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6" asp-validation-class-for="Password">
+                <label asp-for="Password">@L["密码"]</label>
+                <div class="input-group">
+                    <input asp-for="Password" class="form-control" data-toggle="popover" data-placement="top" data-trigger="focus" data-title="@L["Password strength"]" required />
+                    <div class="input-group-append">
+                        <button tabindex="-1" class="btn btn-secondary" type="button" id="togglePassword"><i class="icon fa fa-eye"></i></button>
+                    </div>
+                </div>
+                <div id="passwordStrength"></div>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-group col-md-6" asp-validation-class-for="PasswordConfirmation">
+                <label asp-for="PasswordConfirmation">@L["确认密码"]</label>
+                <div class="input-group">
+                    <input asp-for="PasswordConfirmation" class="form-control" required />
+                    <div class="input-group-append">
+                        <button tabindex="-1" class="btn btn-secondary" type="button" id="togglePasswordConfirmation"><i class="icon fa fa-eye"></i></button>
+                    </div>
+                </div>
+                <span asp-validation-for="PasswordConfirmation" class="text-danger"></span>
+            </div>
+        </div>
+    </fieldset>
+                   
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="reset" class="btn btn-default">Clear</button>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <script type="text/javascript">
+        function toggleConnectionStringAndPrefix() {
+            $("#DatabaseProvider option:selected").each(function () {                
+                $("#connectionStringHint").text($(this).data("connection-string-sample"));
+            });
+        }
+        $("#DatabaseProvider").change(function () {
+            toggleConnectionStringAndPrefix();
+        });
+    </script>
+}

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	<TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Magicube.Data.EFCore.Abstractions\Magicube.Data.EFCore.Abstractions.csproj" />
+    <ProjectReference Include="..\Magicube.Eventbus\Magicube.Eventbus.csproj" />
+	<ProjectReference Include="..\Magicube.Identity\Magicube.Identity.csproj" />
+  </ItemGroup>
+
+</Project>

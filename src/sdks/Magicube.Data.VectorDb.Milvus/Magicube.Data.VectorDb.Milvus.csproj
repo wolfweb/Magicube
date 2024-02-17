@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+	<Version>$(DataVersion)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<PackageReference Include="Milvus.Client" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Magicube.Data.Abstractions\Magicube.Data.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

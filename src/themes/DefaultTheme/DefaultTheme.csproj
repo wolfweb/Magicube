@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;</TargetFrameworks>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\sdks\Magicube.Identity\Magicube.Identity.csproj" />
+    <ProjectReference Include="..\..\sdks\Magicube.Web.UI.Abstractions\Magicube.Web.UI.Abstractions.csproj" />
+    <ProjectReference Include="..\..\sdks\Magicube.Resource\Magicube.Resource.csproj" />
+  </ItemGroup>
+
+</Project>

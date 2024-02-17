@@ -1,0 +1,18 @@
+﻿using System;
+using Magicube.IO.Streams;
+using Magicube.IO.Types;
+
+namespace Magicube.IO.TypeConverter {
+    internal class LongConverter : BaseTypeConverter<long> {
+        protected override void SerializeInternal(long obj, SerializationStream stream) {
+            byte[] data = BitConverter.GetBytes(obj);
+            stream.Write(data);
+        }
+
+        protected override long DeserializeInternal(DeserializationStream stream, Type sourceType) {
+            return stream.ReadLong();
+        }
+
+        public override SerializedType Type => SerializedType.Long;
+    }
+}

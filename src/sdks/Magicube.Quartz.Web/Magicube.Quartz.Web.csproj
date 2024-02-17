@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Quartz.AspNetCore" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Magicube.Data.Abstractions\Magicube.Data.Abstractions.csproj" />
+    <ProjectReference Include="..\Magicube.Net\Magicube.Net.csproj" />
+    <ProjectReference Include="..\Magicube.Web.UI.Abstractions\Magicube.Web.UI.Abstractions.csproj" />
+    <ProjectReference Include="..\Magicube.Web.Abstractions\Magicube.Web.Abstractions.csproj" />
+    <ProjectReference Include="..\Magicube.Quartz\Magicube.Quartz.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+  </PropertyGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\..\sdks\Magicube.Web.Abstractions\Magicube.Web.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

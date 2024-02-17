@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Confluent.Kafka" />
+    <PackageReference Include="Confluent.Kafka.Avro" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Magicube.Core.Extension\Magicube.Core.Extension.csproj" />
+    <ProjectReference Include="..\Magicube.Core\Magicube.Core.csproj" />
+    <ProjectReference Include="..\Magicube.MessageService\Magicube.MessageService.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	<TargetFramework>$(CommonTargetFrameworks)</TargetFramework>
+	<Version>$(VersioningVersion)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<PackageReference Include="LibGit2Sharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Magicube.Versioning.Abstractions\Magicube.Versioning.Abstractions.csproj" />
+  </ItemGroup>
+	
+</Project>

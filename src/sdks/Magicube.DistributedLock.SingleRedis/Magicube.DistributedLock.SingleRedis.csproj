@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Magicube.Cache.Redis\Magicube.Cache.Redis.csproj" />
+    <ProjectReference Include="..\Magicube.DistributedLock\Magicube.DistributedLock.csproj" />
+  </ItemGroup>
+
+</Project>

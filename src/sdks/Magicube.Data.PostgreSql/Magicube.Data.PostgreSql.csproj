@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+		<Version>$(DataVersion)</Version>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Magicube.Data.EFCore.Abstractions\Magicube.Data.EFCore.Abstractions.csproj" />
+		<ProjectReference Include="..\Magicube.Data.Migration\Magicube.Data.Migration.csproj" />
+	</ItemGroup>
+
+</Project>

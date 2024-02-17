@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>$(CommonTargetFrameworks)</TargetFramework>
+	<Version>$(DataVersion)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Magicube.Data.Abstractions\Magicube.Data.Abstractions.csproj" />
+  </ItemGroup>
+	
+  <ItemGroup>
+	<PackageReference Include="LiteDB" />
+	<PackageReference Include="LiteDB.Queryable" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Jint" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Magicube.Data.EFCore.Abstractions\Magicube.Data.EFCore.Abstractions.csproj" />
+    <ProjectReference Include="..\Magicube.Core\Magicube.Core.csproj" />
+    <ProjectReference Include="..\Magicube.Executeflow.Abstractions\Magicube.Executeflow.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

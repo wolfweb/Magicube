@@ -1,0 +1,202 @@
+{
+  "version": "1.0",
+  "defaultProvider": "unpkg",
+  "libraries": [
+    {
+      "library": "jquery@3.6.0",
+      "destination": "wwwroot/lib/jquery/",
+      "files": [
+        "dist/jquery.min.js",
+        "dist/jquery.js",
+        "dist/jquery.slim.min.js",
+        "dist/jquery.slim.js"
+      ]
+    },
+    {
+      "library": "bootswatch@5.2.2",
+      "destination": "wwwroot/lib/bootswatch/",
+        "files": [
+            "dist/morph/bootstrap.css",
+            "dist/morph/bootstrap.min.css",
+            "dist/morph/_bootswatch.scss",
+            "dist/morph/_variables.scss",
+            "dist/quartz/bootstrap.css",
+            "dist/quartz/bootstrap.min.css",
+            "dist/quartz/_bootswatch.scss",
+            "dist/quartz/_variables.scss",
+            "dist/vapor/bootstrap.css",
+            "dist/vapor/bootstrap.min.css",
+            "dist/vapor/_bootswatch.scss",
+            "dist/vapor/_variables.scss",
+            "dist/zephyr/bootstrap.css",
+            "dist/zephyr/bootstrap.min.css",
+            "dist/zephyr/_bootswatch.scss",
+            "dist/zephyr/_variables.scss",
+
+            "dist/cerulean/bootstrap.css",
+            "dist/cerulean/bootstrap.min.css",
+            "dist/cerulean/_bootswatch.scss",
+            "dist/cerulean/_variables.scss",
+            "dist/cosmo/bootstrap.css",
+            "dist/cosmo/bootstrap.min.css",
+            "dist/cosmo/_bootswatch.scss",
+            "dist/cosmo/_variables.scss",
+            "dist/cyborg/bootstrap.css",
+            "dist/cyborg/bootstrap.min.css",
+            "dist/cyborg/_bootswatch.scss",
+            "dist/cyborg/_variables.scss",
+            "dist/darkly/bootstrap.css",
+            "dist/darkly/bootstrap.min.css",
+            "dist/darkly/_bootswatch.scss",
+            "dist/darkly/_variables.scss",
+            "dist/flatly/bootstrap.css",
+            "dist/flatly/bootstrap.min.css",
+            "dist/flatly/_bootswatch.scss",
+            "dist/flatly/_variables.scss",
+            "dist/journal/bootstrap.css",
+            "dist/journal/bootstrap.min.css",
+            "dist/journal/_bootswatch.scss",
+            "dist/journal/_variables.scss",
+            "dist/litera/bootstrap.css",
+            "dist/litera/bootstrap.min.css",
+            "dist/litera/_bootswatch.scss",
+            "dist/litera/_variables.scss",
+            "dist/lumen/bootstrap.css",
+            "dist/lumen/bootstrap.min.css",
+            "dist/lumen/_bootswatch.scss",
+            "dist/lumen/_variables.scss",
+            "dist/lux/bootstrap.css",
+            "dist/lux/bootstrap.min.css",
+            "dist/lux/_bootswatch.scss",
+            "dist/lux/_variables.scss",
+            "dist/materia/bootstrap.css",
+            "dist/materia/bootstrap.min.css",
+            "dist/materia/_bootswatch.scss",
+            "dist/materia/_variables.scss",
+            "dist/minty/bootstrap.css",
+            "dist/minty/bootstrap.min.css",
+            "dist/minty/_bootswatch.scss",
+            "dist/minty/_variables.scss",
+            "dist/pulse/bootstrap.css",
+            "dist/pulse/bootstrap.min.css",
+            "dist/pulse/_bootswatch.scss",
+            "dist/pulse/_variables.scss",
+            "dist/sandstone/bootstrap.css",
+            "dist/sandstone/bootstrap.min.css",
+            "dist/sandstone/_bootswatch.scss",
+            "dist/sandstone/_variables.scss",
+            "dist/simplex/bootstrap.css",
+            "dist/simplex/bootstrap.min.css",
+            "dist/simplex/_bootswatch.scss",
+            "dist/simplex/_variables.scss",
+            "dist/sketchy/bootstrap.css",
+            "dist/sketchy/bootstrap.min.css",
+            "dist/sketchy/_bootswatch.scss",
+            "dist/sketchy/_variables.scss",
+            "dist/slate/bootstrap.css",
+            "dist/slate/bootstrap.min.css",
+            "dist/slate/_bootswatch.scss",
+            "dist/slate/_variables.scss",
+            "dist/solar/bootstrap.css",
+            "dist/solar/bootstrap.min.css",
+            "dist/solar/_bootswatch.scss",
+            "dist/solar/_variables.scss",
+            "dist/spacelab/bootstrap.css",
+            "dist/spacelab/bootstrap.min.css",
+            "dist/spacelab/_bootswatch.scss",
+            "dist/spacelab/_variables.scss",
+            "dist/superhero/bootstrap.css",
+            "dist/superhero/bootstrap.min.css",
+            "dist/superhero/_bootswatch.scss",
+            "dist/superhero/_variables.scss",
+            "dist/united/bootstrap.css",
+            "dist/united/bootstrap.min.css",
+            "dist/united/_bootswatch.scss",
+            "dist/united/_variables.scss",
+            "dist/yeti/bootstrap.css",
+            "dist/yeti/bootstrap.min.css",
+            "dist/yeti/_bootswatch.scss",
+            "dist/yeti/_variables.scss"
+        ]
+    },
+    {
+      "provider": "cdnjs",
+      "library": "font-awesome@6.1.2",
+      "destination": "wwwroot/lib/font-awesome/",
+      "files": [
+        "webfonts/fa-brands-400.ttf",
+        "webfonts/fa-brands-400.woff2",
+        "webfonts/fa-regular-400.ttf",
+        "webfonts/fa-regular-400.woff2",
+        "webfonts/fa-solid-900.ttf",
+        "webfonts/fa-solid-900.woff2",
+        "webfonts/fa-v4compatibility.ttf",
+        "webfonts/fa-v4compatibility.woff2",
+        "css/all.css",
+        "css/all.min.css"
+      ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "bootstrap@5.2.0",
+      "destination": "wwwroot/lib/bootstrap/",
+      "files": [
+          "dist/css/bootstrap.css",
+          "dist/css/bootstrap.min.css",
+          "dist/js/bootstrap.js",
+          "dist/js/bootstrap.min.js",
+          "dist/js/bootstrap.bundle.js",
+          "dist/js/bootstrap.bundle.min.js"
+      ]
+    },
+    {
+      "provider": "cdnjs",
+      "library": "popper.js@2.11.6",
+      "destination": "wwwroot/lib/popper/",
+      "files": [
+        "umd/popper.js",
+        "umd/popper.min.js"
+      ]
+    },
+    {
+        "provider": "jsdelivr",
+        "library": "overlayscrollbars@1.13.3",
+        "destination": "wwwroot/lib/overlayscrollbars",
+        "files": [
+            "css/OverlayScrollbars.css",
+            "css/OverlayScrollbars.min.css",
+            "js/jquery.overlayScrollbars.js",
+            "js/jquery.overlayScrollbars.min.js"
+        ]
+    },
+    {
+        "provider": "cdnjs",
+        "library": "vue@3.2.37",
+        "destination": "wwwroot/lib/vue",
+        "files": [
+            "vue.global.js",
+            "vue.global.min.js",
+            "vue.global.prod.js",
+            "vue.global.prod.min.js"
+        ]
+    },
+    {
+        "library": "element-plus@2.2.12",
+        "destination": "wwwroot/lib/element",
+        "files": [
+            "dist/index.css",
+            "dist/index.full.min.js",
+            "dist/index.full.js",
+            "dist/locale/zh-cn.min.js"
+        ]
+    },
+    {
+        "library": "@microsoft/signalr@latest",
+        "destination": "wwwroot/lib/signalr",
+        "files": [
+            "dist/browser/signalr.js",
+            "dist/browser/signalr.min.js"
+        ]
+    }
+  ]
+}

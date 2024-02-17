@@ -1,0 +1,8 @@
+﻿@model MailOption
+
+@Html.ValidationSummary()
+<entity-form asp-model="@Model" asp-action="@Url.Action("Index")" display="@L["邮件配置"]">
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="submit" class="btn btn-primary">@L["提交"]</button>
+    </div>
+</entity-form>

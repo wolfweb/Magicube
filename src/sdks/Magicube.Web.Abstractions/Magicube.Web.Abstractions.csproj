@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="HtmlSanitizer" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Magicube.Cache.Abstractions\Magicube.Cache.Abstractions.csproj" />
+		<ProjectReference Include="..\Magicube.Data.DbFactroy\Magicube.Data.DbFactroy.csproj" />
+		<ProjectReference Include="..\Magicube.Eventbus\Magicube.Eventbus.csproj" />
+		<ProjectReference Include="..\Magicube.Logging\Magicube.Logging.csproj" />
+	</ItemGroup>
+
+</Project>

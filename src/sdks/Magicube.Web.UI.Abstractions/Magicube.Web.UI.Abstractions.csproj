@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+	<PropertyGroup>
+		<TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Magicube.Data.Abstractions\Magicube.Data.Abstractions.csproj" />
+		<ProjectReference Include="..\Magicube.Data.GraphQL\Magicube.Data.GraphQL.csproj" />
+		<ProjectReference Include="..\Magicube.Localization\Magicube.Localization.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Attributes\" />
+	</ItemGroup>
+
+</Project>

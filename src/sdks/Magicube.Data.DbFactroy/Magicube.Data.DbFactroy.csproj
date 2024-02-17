@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+	<Version>$(DataVersion)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Magicube.Data.Mongodb\Magicube.Data.Mongodb.csproj" />
+    <ProjectReference Include="..\Magicube.Data.MySql\Magicube.Data.MySql.csproj" />
+    <ProjectReference Include="..\Magicube.Data.PostgreSql\Magicube.Data.PostgreSql.csproj" />
+    <ProjectReference Include="..\Magicube.Data.Sqlite\Magicube.Data.Sqlite.csproj" />
+    <ProjectReference Include="..\Magicube.Data.SqlServer\Magicube.Data.SqlServer.csproj" />
+  </ItemGroup>
+
+</Project>

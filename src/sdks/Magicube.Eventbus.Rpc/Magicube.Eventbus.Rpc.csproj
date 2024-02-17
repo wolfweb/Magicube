@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<PackageReference Include="Grpc.AspNetCore" />
+	<PackageReference Include="MagicOnion.Server" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Magicube.Eventbus.Rpc.Abstractions\Magicube.Eventbus.Rpc.Abstractions.csproj" />
+  </ItemGroup>
+</Project>

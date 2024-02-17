@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+	<TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\sdks\Magicube.Cache.Redis\Magicube.Cache.Redis.csproj" />
+    <ProjectReference Include="..\..\sdks\Magicube.Cache.Web\Magicube.Cache.Web.csproj" />
+	<ProjectReference Include="..\..\sdks\Magicube.Resource\Magicube.Resource.csproj" />
+    <ProjectReference Include="..\..\sdks\Magicube.Web.SignalR\Magicube.Web.SignalR.csproj" />
+  </ItemGroup>
+
+</Project>

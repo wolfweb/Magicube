@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>$(CommonTargetFrameworks)</TargetFramework>
+	<Version>$(DataVersion)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+  	<PackageReference Include="Microsoft.EntityFrameworkCore" />
+  	<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+  	<PackageReference Include="SqlKata" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Magicube.Data.Abstractions\Magicube.Data.Abstractions.csproj" />
+  </ItemGroup>
+</Project>

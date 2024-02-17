@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	<TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+  	<FrameworkReference Include="Microsoft.AspnetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DashScope" Version="0.8.0" />
+	<PackageReference Include="DashScope.SemanticKernel" Version="0.8.0" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\Magicube.AI.Chat.Abstractions\Magicube.AI.Chat.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="WebServer\**" />
+    <EmbeddedResource Remove="WebServer\**" />
+    <None Remove="WebServer\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Win32.Registry" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Magicube.Core\Magicube.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="CommandParser\" />
+  </ItemGroup>
+
+</Project>

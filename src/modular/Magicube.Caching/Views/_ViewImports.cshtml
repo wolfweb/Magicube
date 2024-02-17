@@ -1,0 +1,12 @@
+@using Magicube.Cache
+@using Magicube.Cache.Abstractions
+@using Magicube.Cache.Redis
+@using Magicube.Data
+@using Magicube.Web.ModelBinders.Polymorphic
+@using Microsoft.AspNetCore.Builder
+@using Microsoft.Extensions.Options
+
+@inherits Magicube.Web.MagicubeRazorPage<TModel> 
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Magicube.Resource

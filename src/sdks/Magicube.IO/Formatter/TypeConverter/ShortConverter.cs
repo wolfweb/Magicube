@@ -1,0 +1,18 @@
+﻿using System;
+using Magicube.IO.Streams;
+using Magicube.IO.Types;
+
+namespace Magicube.IO.TypeConverter {
+    internal class ShortConverter : BaseTypeConverter<short> {
+        protected override void SerializeInternal(short obj, SerializationStream stream) {
+            byte[] data = BitConverter.GetBytes(obj);
+            stream.Write(data);
+        }
+
+        protected override short DeserializeInternal(DeserializationStream stream, Type sourceType) {
+            return stream.ReadShort();
+        }
+
+        public override SerializedType Type => SerializedType.Short;
+    }
+}

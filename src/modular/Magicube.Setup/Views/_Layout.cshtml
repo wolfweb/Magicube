@@ -1,0 +1,31 @@
+﻿<!doctype html>
+
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>@Site.Title</title>
+    <script asp-name="bootstrap" version="5" at="Foot"></script>
+    <style asp-name="Minty" version="5"></style>
+    <style asp-name="admin" version="1"></style>    
+    @await RenderSectionAsync("Headers", required: false)
+    <resources type="Meta" />
+    <resources type="HeadLink" />
+    <resources type="Stylesheet" />
+    <resources type="HeadScript" />
+</head>
+<body>
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="text-muted text-center">Developed by <a href="@Website" title="@Author" target="_blank">@Author</a>.</p>
+        </div>
+    </footer>
+</body>
+<resources type="FootScript" />
+@RenderSection("Scripts", required: false)
+</html>

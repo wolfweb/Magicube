@@ -1,0 +1,18 @@
+﻿using System;
+using Magicube.IO.Streams;
+using Magicube.IO.Types;
+
+namespace Magicube.IO.TypeConverter {
+    internal class DoubleConverter : BaseTypeConverter<double> {
+        protected override void SerializeInternal(double obj, SerializationStream stream) {
+            byte[] data = BitConverter.GetBytes(obj);
+            stream.Write(data);
+        }
+
+        protected override double DeserializeInternal(DeserializationStream stream, Type sourceType) {
+            return stream.ReadDouble();
+        }
+
+        public override SerializedType Type => SerializedType.Double;
+    }
+}

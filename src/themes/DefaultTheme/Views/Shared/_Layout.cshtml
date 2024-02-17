@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+
+<html lang="@CultureInfo.CurrentUICulture.Name.ToLowerInvariant()">
+<head>
+    <title>@ViewBag.Title</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <link type="image/x-icon" rel="shortcut icon" href="~/DefaultTheme/favicon.ico" />
+    <script asp-name="bootstrap" version="5" at="Foot"></script>
+    <style asp-name="cosmo" version="5"></style>
+    <style asp-name="font-awesome" version="6"></style>
+    <style asp-name="main" version="1"></style>
+    @await RenderSectionAsync("Headers", required: false)
+    <resources type="Meta" />
+    <resources type="HeadLink" />
+    <resources type="Stylesheet" />
+    <resources type="HeadScript" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar">
+                <partial name="LoginMenu" />
+            </div>
+        </div>
+    </nav>
+    @await RenderSectionAsync("Header", required: false)
+    <main role="main" class="container">
+        @await RenderSectionAsync("Messages", required: false)
+        @RenderBody()
+    </main>
+    <footer>
+        <div class="container">
+            @await RenderSectionAsync("Footer", required: false)
+        </div>
+    </footer>
+</body>
+<resources type="FootScript" />
+@RenderSection("Scripts", required: false)
+</html>

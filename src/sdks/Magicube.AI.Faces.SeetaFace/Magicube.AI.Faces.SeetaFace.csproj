@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	<TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Magicube.AI.Faces\Magicube.AI.Faces.csproj" />
+  </ItemGroup>
+	
+  <ItemGroup>
+  	<PackageReference Include="ViewFaceCore" />
+  	<PackageReference Include="ViewFaceCore.all_models" />
+  	<PackageReference Include="ViewFaceCore.Extension.ImageSharp" />
+  	<PackageReference Include="ViewFaceCore.runtime.win.x64" />
+  	<PackageReference Include="ViewFaceCore.runtime.win.x86" />
+  </ItemGroup>
+</Project>

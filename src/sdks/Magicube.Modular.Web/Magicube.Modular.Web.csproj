@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>    
+    <ProjectReference Include="..\Magicube.Web.Abstractions\Magicube.Web.Abstractions.csproj" />    
+    <ProjectReference Include="..\Magicube.ModularCore\Magicube.ModularCore.csproj" />
+  </ItemGroup>
+
+</Project>

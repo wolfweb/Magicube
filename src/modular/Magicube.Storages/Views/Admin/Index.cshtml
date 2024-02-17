@@ -1,0 +1,30 @@
+﻿@model PageResult<StorageStore,int>
+@{
+
+}
+
+@functions{
+    bool DetectSupperUser(object x){
+        return ((dynamic)x).UserName == "ADMIN";
+    }
+}
+
+<entity-table model="@Model" asp-controller="@Url.Action("Index")" asp-action="@Url.Action("Index")">
+    <table-settings>
+        <container-settings display="@L["存储管理"]">
+            <a class="btn btn-primary float-right" href="@Url.Action("Editor")">创建</a>
+        </container-settings>
+        <pagination-setttings page-index="Model.Cursor"></pagination-setttings>
+    </table-settings>
+    <table-columns>
+        <table-column for="Id" title="@L["选择"]" selectable="true"></table-column>
+        <table-column for="Name"></table-column>
+        <table-column for="Provider"></table-column>
+        <table-column for="Template"></table-column>
+        <table-column for="MaxSize"></table-column>
+    </table-columns>
+    <table-buttons column-style="display: flex; justify-content: space-around;">
+        <table-button title="@L["编辑"]" icon-class="fa fa-edit" asp-action="x=>@Url.Action("Editor",new{id =((StorageStore)x).Id })"></table-button>
+        <table-button title="@L["删除"]" icon-class="fa fa-times" asp-condition="@DetectSupperUser"></table-button>
+    </table-buttons>            
+</entity-table>

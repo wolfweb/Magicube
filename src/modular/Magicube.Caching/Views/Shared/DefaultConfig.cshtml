@@ -1,0 +1,10 @@
+﻿@model CacheSetting
+
+@Html.PolymorphicTypeValue(typeof(MemoryCacheSetting))
+<div class="form-group text-start">
+    <input type="hidden" name="CacheProvider" value="InMemoryCache" />
+    <div class="alert alert-dismissible alert-warning">
+        <h4 class="alert-heading">@L["提示"]!</h4>
+        <p class="mb-0">@L["默认缓存已启用"]</p>
+    </div>
+</div>

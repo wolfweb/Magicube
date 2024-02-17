@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+	<TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Sdks\Magicube.Identity\Magicube.Identity.csproj" />
+    <ProjectReference Include="..\..\sdks\Magicube.Localization.Data\Magicube.Localization.Data.csproj" />
+    <ProjectReference Include="..\..\sdks\Magicube.Web.UI.Abstractions\Magicube.Web.UI.Abstractions.csproj" />
+    <ProjectReference Include="..\..\sdks\Magicube.Resource\Magicube.Resource.csproj" />
+    <ProjectReference Include="..\..\sdks\Magicube.Web.Abstractions\Magicube.Web.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

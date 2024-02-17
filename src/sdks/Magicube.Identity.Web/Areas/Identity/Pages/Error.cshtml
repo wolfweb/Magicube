@@ -1,0 +1,29 @@
+﻿@page
+@model ErrorModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Error";
+}
+
+<h1 class="text-danger">错误.</h1>
+<h2 class="text-danger">请求发生异常.</h2>
+
+<div class="row justify-content-center">
+	<div class="col-auto" style="width:500px;">
+		@{ 
+			switch (HttpContext.Response.StatusCode)
+			{
+				case 401:
+					<h1>没有权限访问当前的页面或请求的资源</h1>
+					break;
+				case 404:
+					<h1>请求的页面或资源没找到</h1>
+					break;
+				case 500:
+				default:
+					<h1>服务器发生异常，请联系管理员</h1>
+					break;
+			}
+		}
+	</div>
+</div>

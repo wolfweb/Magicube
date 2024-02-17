@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Magicube.AutoMap.Mapster\Magicube.AutoMap.Mapster.csproj" />
+    <ProjectReference Include="..\Magicube.Cache.Web\Magicube.Cache.Web.csproj" />
+    <ProjectReference Include="..\Magicube.ElasticSearch.Web\Magicube.ElasticSearch.Web.csproj" />
+    <ProjectReference Include="..\Magicube.Identity.Web\Magicube.Identity.Web.csproj" />
+    <ProjectReference Include="..\Magicube.Localization.Data\Magicube.Localization.Data.csproj" />
+    <ProjectReference Include="..\Magicube.Logging\Magicube.Logging.csproj" />
+    <ProjectReference Include="..\Magicube.Modular.Web\Magicube.Modular.Web.csproj" />
+    <ProjectReference Include="..\Magicube.Quartz.Web\Magicube.Quartz.Web.csproj" />
+    <ProjectReference Include="..\Magicube.Storage.Web\Magicube.Storage.Web.csproj" />
+    <ProjectReference Include="..\Magicube.Web.UI.Abstractions\Magicube.Web.UI.Abstractions.csproj" />
+    <ProjectReference Include="..\Magicube.Web.UI.Liquid\Magicube.Web.UI.Liquid.csproj" />
+    <ProjectReference Include="..\Magicube.Autoroute.Abstractions\Magicube.Autoroute.Abstractions.csproj" />
+    <ProjectReference Include="..\Magicube.Resource\Magicube.Resource.csproj" />
+    <ProjectReference Include="..\Magicube.Web.Abstractions\Magicube.Web.Abstractions.csproj" />
+    <ProjectReference Include="..\Magicube.Web.SignalR\Magicube.Web.SignalR.csproj" />
+  </ItemGroup>
+
+</Project>

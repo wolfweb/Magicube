@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	<TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<FrameworkReference Include="Microsoft.AspnetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<PackageReference Include="Microsoft.SemanticKernel" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\Magicube.Core\Magicube.Core.csproj" />
+  </ItemGroup>
+</Project>

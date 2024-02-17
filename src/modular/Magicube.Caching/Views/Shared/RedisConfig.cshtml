@@ -1,0 +1,29 @@
+﻿@model CacheSetting
+
+@{
+	RedisCacheSetting _model = (Model != null ? Model as RedisCacheSetting : new RedisCacheSetting()) ?? new RedisCacheSetting();
+}
+@Html.PolymorphicTypeValue(typeof(RedisCacheSetting))
+<div class="form-group mb-3">
+  <label for="floatingInput">Redis地址</label>
+  <input type="text" class="form-control" name="Host" placeholder="@L["请输入链接地址"]" value="@_model.Host">
+</div>
+<div class="form-group mb-3">
+  <label for="floatingInput">Redis端口</label>
+  <input type="text" class="form-control" name="Port" value="@_model.Port">
+</div>
+<div class="form-group">
+  <label for="floatingPassword">Redis连接密码</label>
+  <input type="password" class="form-control" id="floatingPassword" placeholder="@L["请输入链接密码"]" value="@_model.Password">
+</div>
+<div class="form-group text-end">
+	<div class="row">
+        <div class="col">
+	       <small id="tip" class="form-text text-success"></small>        
+        </div>
+        <div class="col text-end">
+	       <button class="btn btn-link" type="button" id="redisConnTest">@L["测试连接"]</button>
+	       <button class="btn btn-danger" type="submit">@L["保存设置"]</button>        	
+        </div>
+    </div>
+</div>

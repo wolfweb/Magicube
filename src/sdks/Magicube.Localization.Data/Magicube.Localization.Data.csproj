@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Magicube.Cache.Abstractions\Magicube.Cache.Abstractions.csproj" />
+    <ProjectReference Include="..\Magicube.Data.Abstractions\Magicube.Data.Abstractions.csproj" />
+    <ProjectReference Include="..\Magicube.Localization\Magicube.Localization.csproj" />
+  </ItemGroup>
+
+</Project>

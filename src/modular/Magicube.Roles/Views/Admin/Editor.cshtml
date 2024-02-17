@@ -1,0 +1,30 @@
+﻿@model RoleViewModel
+@{
+    var permissions = ViewBag.Permissions as Permission[];
+}
+
+@Html.ValidationSummary()
+<entity-form asp-model="@Model" asp-action="@Url.Action("Editor")" display="@L["角色编辑"]">
+	@foreach (var it in permissions.GroupBy(l => l.Category))
+    {
+        <div class="form-group">
+            <label class="control-label col-md-2"></label>
+            <div class="col-md-10">
+                <h5>@it.Key &nbsp;&nbsp;&nbsp;<label><input type="checkbox" class="checkall" data="@it.Key">全选</label></h5>
+                <div class="row @it.Key">
+                    @foreach (var item in it)
+                    {
+                        <div class="col-md-4">
+                            <input type="checkbox" value="@item.Name" name="permissions" />
+                            @item.Name.Replace(it.Key+"-","")
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="submit" class="btn btn-primary">@L["提交"]</button>
+    </div>
+</entity-form>

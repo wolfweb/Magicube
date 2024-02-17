@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+	<TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>    
+  </PropertyGroup>
+	
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="7.0.7" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\Magicube.Eventbus\Magicube.Eventbus.csproj" />
+    <ProjectReference Include="..\Magicube.Core\Magicube.Core.csproj" />
+    <ProjectReference Include="..\Magicube.Identity\Magicube.Identity.csproj" />
+  </ItemGroup>
+
+</Project>

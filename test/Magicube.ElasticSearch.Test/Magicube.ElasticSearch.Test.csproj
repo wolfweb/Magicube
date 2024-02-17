@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>$(CommonTargetFrameworks)</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\sdks\Magicube.ElasticSearch7\Magicube.ElasticSearch7.csproj" />
+    <ProjectReference Include="..\..\src\sdks\Magicube.ElasticSearch\Magicube.ElasticSearch.csproj" />
+    <ProjectReference Include="..\..\src\Sdks\Magicube.Core\Magicube.Core.csproj" />
+    <ProjectReference Include="..\Magicube.TestBase\Magicube.TestBase.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+	<PackageReference Include="Moq" />
+	<PackageReference Include="xunit" />
+	<PackageReference Include="xunit.runner.visualstudio">
+	 <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	 <PrivateAssets>all</PrivateAssets>
+	</PackageReference>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,32 @@
+﻿@model CacheSetting
+@{
+	var cacheOptions = ViewBag.CacheOptions as CacheOptions;
+}
+
+<div class="row container-sm">
+	<nav>
+		<div class="nav nav-tabs" role="tablist" id="nav-tab">
+			@foreach(var provider in cacheOptions.CacheProvider) {
+				<button class="nav-link @(Model.CacheProvider==provider.Name?"active":"")" id="nav-@provider.Name" data-bs-toggle="tab" data-bs-target="#@provider.Name" type="button" role="tab" aria-controls="@provider.Name" aria-selected="@(Model.CacheProvider==provider.Name?"true":"false")">@L[provider.Display]</button>
+			}
+		</div>
+	</nav>
+	<div class="tab-content" id="nav-tabContent">
+		@foreach(var provider in cacheOptions.CacheProvider) {
+			<div class="tab-pane fade @(Model.CacheProvider==provider.Name?"show active":"")" id="@provider.Name" role="tabpanel" aria-labelledby="nav-@provider.Name">
+				<div class="card card-default">
+					<div class="card-body">
+						<form asp-action="Index" method="post" class="d-grid gap-3 align-items-center">
+						@if (!string.IsNullOrEmpty(provider.PartialView)) {
+							<partial name="@provider.PartialView" model="Model" />
+						}
+						</form>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+</div>
+@section Scripts{
+	<script asp-name="signalrRedis" version="1" at="Foot"></script>
+}

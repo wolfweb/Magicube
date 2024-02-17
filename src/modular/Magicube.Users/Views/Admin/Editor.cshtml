@@ -1,0 +1,10 @@
+﻿@model UserViewModel
+@{
+    
+}
+@Html.ValidationSummary()
+<entity-form asp-model="@Model" asp-action="@Url.Action("Editor")" display="@L["用户编辑"]">	
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="submit" class="btn btn-primary">@L["提交"]</button>
+    </div>
+</entity-form>

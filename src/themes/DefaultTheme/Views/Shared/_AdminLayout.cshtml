@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html lang="@CultureInfo.CurrentUICulture.Name.ToLowerInvariant()" style="height: auto;">
+<head>
+  <title>@ViewBag.Title</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <link type="image/x-icon" rel="shortcut icon" href="~/DefaultTheme/favicon.ico" />
+  <style asp-name="bootstrap" version="5"></style> 
+  <style asp-name="cosmo" version="5"></style> 
+  <style asp-name="font-awesome" version="6"></style> 
+  <style asp-name="overlayscrollbars" version="1"></style> 
+  <style asp-name="element" version="2"></style> 
+  <style asp-name="admin" version="1"></style>
+  <style asp-name="tagsinput" version="0"></style>
+  <resources type="Meta" /> <resources type="HeadLink" /> <resources type="Stylesheet" /> <resources type="HeadScript" />
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper">
+    <div class="preloader flex-column justify-content-center align-items-center" style="height: 0px;">
+      <img class="animation__shake" src="/defaultTheme/images/logo.svg" alt="Magicube Logo" height="60" width="60" style="display: none;">
+    </div>
+
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+      <vc:navbar name="admin"></vc:navbar>
+    </nav>
+
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <a href="/" class="brand-link">
+        <img src="/DefaultTheme/images/logo.svg" alt="Magicube Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <span class="brand-text font-weight-light">Magicube</span>
+      </a>
+      <div class="sidebar">
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+          <div class="image">
+            <img src="@(User.FindFirst<string>("Avatar") ?? "/DefaultTheme/images/default_avatar.png")" class="img-circle elevation-0" alt="User Image">
+          </div>
+          <div class="info">
+            <a href="#" class="d-block">@User.Identity.Name</a>
+          </div>
+        </div>
+
+        <div class="form-inline">
+          <div class="input-group" data-widget="sidebar-search">
+            <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+            <div class="input-group-append">
+              <button class="btn btn-sidebar">
+                <i class="fas fa-search fa-fw"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <nav class="mt-2">
+          <vc:side-menu name="admin"></vc:side-menu>
+        </nav>
+      </div>
+    </aside>
+    <div class="content-wrapper">
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0">Dashboard</h1>
+            </div>
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="#">@L["首页"]</a></li>
+                <li class="breadcrumb-item active">Dashboard v1</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+      <section class="content">
+        <div class="container-fluid" id="app">
+          @await RenderSectionAsync("Messages", required: false)
+          @RenderBody()
+        </div>
+      </section>
+    </div>
+
+    <footer class="main-footer">
+      <strong>Copyright &copy; 2018-2023 <a href="#">magicube.io</a>.</strong>
+      All rights reserved.
+      <div class="float-right d-none d-sm-inline-block">
+        <b>Version</b> 1.0.0
+      </div>
+    </footer>
+  </div>
+  <partial name="_AnalyticsScript">
+</body>
+  <script asp-name="bootstrap" version="5" at="Foot"></script>
+  <script asp-name="signalr" version="6" at="Foot"></script>
+  <script asp-name="overlayscrollbars" version="1" at="Foot"></script>
+  <script asp-name="admin" version="1" at="Foot"></script>
+  <script asp-name="tagsinput" version="0" at="Foot"></script>
+  @RenderSection("Scripts", required: false)
+  <resources type="FootScript" />
+</html>

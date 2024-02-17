@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	<TargetFrameworks>$(CommonTargetFrameworks)</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Magicube.Web.Abstractions\Magicube.Web.Abstractions.csproj" />
+    <ProjectReference Include="..\Magicube.Storage.Aliyun\Magicube.Storage.Aliyun.csproj" />
+    <ProjectReference Include="..\Magicube.Storage.Tencent\Magicube.Storage.Tencent.csproj" />
+    <ProjectReference Include="..\Magicube.Storage.Upyun\Magicube.Storage.Upyun.csproj" />
+  </ItemGroup>
+
+</Project>
