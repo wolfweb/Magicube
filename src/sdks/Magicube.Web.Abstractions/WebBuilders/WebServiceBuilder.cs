@@ -110,6 +110,10 @@ namespace Magicube.Web {
                 });
 
                 Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+                MvcBuilder.AddMvcOptions(options => {
+                    options.Filters.Add<WebApiResultFilter>();
+                });
             }
 
             return this;
