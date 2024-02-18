@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Magicube.AI.Chat.Xunfei {
     public static class SparkDeskKernelBuilderExtensions {
-        const string ServiceId = "SparkDesk";
+        public const string ServiceId = "SparkDesk";
         public static IKernelBuilder WithSparkDeskCompletionService(this IKernelBuilder builder, SparkDeskOption options) {
             var generation = new SparkDeskTextCompletion(options);
             builder.Services.Add(ServiceId, typeof(IChatCompletionService), sp => generation, ServiceLifetime.Singleton);

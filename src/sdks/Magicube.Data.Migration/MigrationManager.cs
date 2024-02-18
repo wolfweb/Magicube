@@ -13,7 +13,6 @@ using Magicube.Data.Abstractions;
 using Magicube.Data.Abstractions.Attributes;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
-using Org.BouncyCastle.Asn1.X509.Qualified;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -91,9 +90,11 @@ namespace Magicube.Data.Migration {
 
 			if (schema.Exists()) {
                 var builder = Database.Alter.Table(tableName) as AlterTableExpressionBuilder;
+                var keyProperties = GetPrimaryKey(type);
                 foreach (var prop in fields) {
                     var attr = prop.Member.GetCustomAttribute<NotMappedAttribute>();
                     if (attr != null) continue;
+					if (keyProperties.Any(x => x.Name == prop.Member.Name)) continue;
 					DefineFields(tableName, prop ,builder, schema);
                 }
             } else {
@@ -386,15 +387,9 @@ namespace Magicube.Data.Migration {
         }
 
 		private IList<ColumnDefinition> BuildPrimaryKey(string tableName, Type type) {
-			var keyProperties = TypeAccessor.Get(type, null).Context.Properties.Where(x => x.Attributes.Any(m => m is KeyAttribute)).Select(x=>x.Member).ToList();
-			if (keyProperties.Count == 0) {
-                var idKeyProperty = TypeAccessor.Get(type, null).Context.Properties.FirstOrDefault(x => x.Member.Name == Entity.IdKey)?.Member;
-				if (idKeyProperty == null) throw new InvalidDataException($"invalid type for migration with the type {type.Name}");
+			var keyProperties = GetPrimaryKey(type);
 
-				keyProperties.Add(idKeyProperty);
-            }
-
-			var result = new List<ColumnDefinition>();
+            var result = new List<ColumnDefinition>();
 			foreach (var keyProperty in keyProperties) {
 				if (!PrimaryKeyTypeMapping.TryGetValue(keyProperty.PropertyType, out DbType value)) throw new NotSupportedException($"not support db type with type {type.Name}");
 
@@ -413,7 +408,19 @@ namespace Magicube.Data.Migration {
 			return result;
 		}
 
-		private void Execute() {
+		private List<PropertyInfo> GetPrimaryKey(Type type) {
+            var keyProperties = TypeAccessor.Get(type, null).Context.Properties.Where(x => x.Attributes.Any(m => m is KeyAttribute)).Select(x => x.Member).ToList();
+            if (keyProperties.Count == 0) {
+                var idKeyProperty = TypeAccessor.Get(type, null).Context.Properties.FirstOrDefault(x => x.Member.Name == Entity.IdKey)?.Member;
+                if (idKeyProperty == null) throw new InvalidDataException($"invalid type for migration with the type {type.Name}");
+
+                keyProperties.Add(idKeyProperty);
+            }
+			return keyProperties;
+        }
+
+
+        private void Execute() {
 			_semaphoreSlim.Wait();
 			try {
 				foreach (var expression in _migrationContext.Expressions) {
