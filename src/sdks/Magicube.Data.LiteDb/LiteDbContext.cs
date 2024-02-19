@@ -38,9 +38,13 @@ namespace Magicube.Data.LiteDb {
 			
 			InitIndexes(collection);
 
-			foreach(var item in _options.EntityMappings) {
-				var conf = New<IMappingConfiguration>.Creator(item);
-				conf.ApplyConfiguration(BsonMapper.Global);
+			foreach(var item in _options.EntityConfs) {
+				if (item.Value != null) {
+					foreach(var it in item.Value) {
+						var conf = New<IMappingConfiguration>.Creator(it);
+						conf.ApplyConfiguration(BsonMapper.Global);
+					}
+				}
 			}
 
 			return collection;

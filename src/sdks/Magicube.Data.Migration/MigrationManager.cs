@@ -12,6 +12,7 @@ using Magicube.Core.Reflection;
 using Magicube.Data.Abstractions;
 using Magicube.Data.Abstractions.Attributes;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -80,22 +81,34 @@ namespace Magicube.Data.Migration {
 
 		public void BuildTable<T>() where T : Entity {
 			var type = typeof(T);
-			BuildTable(type);
+			BuildTable(type, null);
         }
 
-        public void BuildTable(Type type) {
-			var tableName = GetTableName(type);
+        public void BuildTable(Type type, IDbContext dbContext, bool useConf = false) {
+			var tableName = GetTableName(type, dbContext, useConf);
             var schema = Database.Schema.Table(tableName);
 			var fields = TypeAccessor.Get(type, null).Context.Properties;
 
-			if (schema.Exists()) {
+			IEntityType entityType = null;
+			if (useConf) {
+                var dbCtx = dbContext as DbContext;
+                entityType = dbCtx.Model.FindEntityType(type);
+            }
+
+            if (schema.Exists()) {
                 var builder = Database.Alter.Table(tableName) as AlterTableExpressionBuilder;
-                var keyProperties = GetPrimaryKey(type);
+                var keyProperties = GetPrimaryKey(type, dbContext, useConf);
                 foreach (var prop in fields) {
                     var attr = prop.Member.GetCustomAttribute<NotMappedAttribute>();
                     if (attr != null) continue;
 					if (keyProperties.Any(x => x.Name == prop.Member.Name)) continue;
-					DefineFields(tableName, prop ,builder, schema);
+
+					if (useConf) {
+						var confProp = entityType.FindProperty(prop.Member);
+                        DefineFields(tableName, prop, builder, schema, confProp);
+                    } else {
+						DefineFields(tableName, prop, builder, schema);
+					}
                 }
             } else {
                 var builder = Database.Create.Table(tableName) as CreateTableExpressionBuilder;
@@ -103,7 +116,19 @@ namespace Magicube.Data.Migration {
                 var pks = BuildPrimaryKey(tableName, type);
                 expression.Columns.AddRange(pks);
 
-                RetrieveTableExpressions(tableName, fields, builder);
+                foreach (var prop in fields) {
+                    var attr = prop.Member.GetCustomAttribute<NotMappedAttribute>();
+                    if (attr != null) continue;
+                    if (pks.Any(x => x.Name == prop.Member.Name)) continue;
+
+                    if (useConf) {
+                        var confProp = entityType.FindProperty(prop.Member);
+                        DefineFields(tableName, prop, builder, confProp);
+                    }
+					else {
+                        DefineFields(tableName, prop, builder);
+					}
+                }
             }
 
             var tableAttrs = type.GetCustomAttributes<IndexAttribute>();
@@ -212,7 +237,13 @@ namespace Magicube.Data.Migration {
 			}
 		}
 
-		public string GetTableName(Type type) {
+		public string GetTableName(Type type, IDbContext dbContext = null, bool useConf = false) {
+			if(useConf && dbContext != null) {
+                var dbCtx = dbContext as DbContext;
+                var tbName = dbCtx.Model.FindEntityType(type).GetTableName();
+				if (!tbName.IsNullOrEmpty()) return tbName;
+            }
+
 			var attr = type.GetCustomAttribute<TableAttribute>();
 			if (attr != null) return attr.Name;
 			return type.Name;
@@ -238,7 +269,7 @@ namespace Magicube.Data.Migration {
 			}
 		}
 
-		protected virtual void DefineFields<TNext>(Type propType, ColumnExtendAttribute columnAttr, IColumnTypeSyntax<TNext> column) where TNext : IFluentSyntax {
+		protected virtual void DefineFields<TNext>(Type propType, ColumnExtendAttribute columnAttr, IColumnTypeSyntax<TNext> column, IProperty confProperty = null) where TNext : IFluentSyntax {
             if (propType.IsEnum)
                 column.AsInt16();
             else if (columnAttr != null && columnAttr.Size > 0) {
@@ -251,27 +282,35 @@ namespace Magicube.Data.Migration {
 				}
             }
             if (propType == typeof(string)) {
-                var size = 255;
-                if (columnAttr != null && columnAttr.Size > 0) {
-                    size = columnAttr.Size;
-                }
-                column.AsString(size);
+				if (confProperty != null) {
+					column.AsString(confProperty.GetMaxLength() ?? 255);
+                } else {
+					var size = 255;
+					if (columnAttr != null && columnAttr.Size > 0) {
+						size = columnAttr.Size;
+					}
+					column.AsString(size);
+				}
             }
         }
 
-		protected virtual void DefineFields(string tableName, PropertyInfoExplorer propertyInfo, AlterTableExpressionBuilder builder, ISchemaTableSyntax schema, bool canBeNullable = false) {
+        protected virtual void DefineFields(string tableName, PropertyInfoExplorer propertyInfo, AlterTableExpressionBuilder builder, ISchemaTableSyntax schema, IProperty confProperty = null) {
             var propType = propertyInfo.Member.PropertyType;
             var (columnAttr, foreignKey) = GetColumnName(propertyInfo.Member, out string columnName);
-
-			//如果是可空值类型,则获取真实的类型
+			bool canBeNullable = false;
             if (Nullable.GetUnderlyingType(propType) is Type uType) {
                 propType = uType;
                 canBeNullable = true;
-            } else if (propertyInfo.IsNullable) {
-                canBeNullable = true;
-            } else {
-                canBeNullable = !propType.IsSimpleType();
-            }
+            }else if (confProperty != null) {
+                columnName = confProperty.GetColumnName();
+                canBeNullable = confProperty.IsColumnNullable();
+			} else {
+				if (propertyInfo.IsNullable) {
+					canBeNullable = true;
+				} else {
+					canBeNullable = !propType.IsSimpleType();
+				}
+			}
 
             if (!_typeAlterMapping.ContainsKey(propType) && foreignKey == null && !propType.IsEnum && columnAttr == null)
                 return;
@@ -298,7 +337,7 @@ namespace Magicube.Data.Migration {
 				}
             }
 
-            DefineFields(propType, columnAttr , column);
+            DefineFields(propType, columnAttr , column, confProperty);
 
             if (columnAttr != null && !columnAttr.Nullable) canBeNullable = false;
 
@@ -313,23 +352,27 @@ namespace Magicube.Data.Migration {
             }
         }
 
-        protected virtual void DefineFields(string tableName, CreateTableExpressionBuilder create, PropertyInfoExplorer propertyInfo, IEnumerable<string> exitsColumns, bool canBeNullable = false) {			
+        protected virtual void DefineFields(string tableName, PropertyInfoExplorer propertyInfo, CreateTableExpressionBuilder create, IProperty confProperty = null) {			
 			var propType   = propertyInfo.Member.PropertyType;
 			var (columnAttr, foreignKey) = GetColumnName(propertyInfo.Member, out string columnName);
+			bool canBeNullable = false;
 
-			if (Nullable.GetUnderlyingType(propType) is Type uType) {
-				propType = uType;
-				canBeNullable = true;
-            } else if (propertyInfo.IsNullable) {
+            if (Nullable.GetUnderlyingType(propType) is Type uType) {
+                propType = uType;
                 canBeNullable = true;
-            } else {				
-				canBeNullable = !propType.IsSimpleType();
+            } else if(confProperty != null) {
+				columnName    = confProperty.GetColumnName();
+				canBeNullable = confProperty.IsColumnNullable();
+			} else {
+				if (propertyInfo.IsNullable) {
+					canBeNullable = true;
+				} else {				
+					canBeNullable = !propType.IsSimpleType();
+				}
 			}
 
 			if (!_typeMapping.ContainsKey(propType) && foreignKey == null && !propType.IsEnum && columnAttr == null)
 				return;
-
-			if (exitsColumns.Contains(columnName)) return;
 
             var column = create.WithColumn(columnName);
 
@@ -351,7 +394,7 @@ namespace Magicube.Data.Migration {
                     create.Indexed(indexName);
             }
 
-			DefineFields(propType, columnAttr, column);
+			DefineFields(propType, columnAttr, column, confProperty);
 
             if (columnAttr != null && !columnAttr.Nullable) canBeNullable = false;
 
@@ -363,17 +406,6 @@ namespace Magicube.Data.Migration {
                 } else if (propType.IsSimpleType()) {
 					create.WithDefaultValue(propType.GetValue());
 				}
-			}
-		}
-
-        protected void RetrieveTableExpressions(string tableName, IEnumerable<PropertyInfoExplorer> fields, CreateTableExpressionBuilder builder) {
-			var expression = builder.Expression;
-			var exitsColumns = expression.Columns.Select(x => x.Name);
-
-			foreach (var prop in fields) {
-                var attr = prop.Member.GetCustomAttribute<NotMappedAttribute>();
-                if (attr != null) continue;
-                DefineFields(tableName, builder, prop, exitsColumns);
 			}
 		}
 
@@ -408,17 +440,24 @@ namespace Magicube.Data.Migration {
 			return result;
 		}
 
-		private List<PropertyInfo> GetPrimaryKey(Type type) {
-            var keyProperties = TypeAccessor.Get(type, null).Context.Properties.Where(x => x.Attributes.Any(m => m is KeyAttribute)).Select(x => x.Member).ToList();
+		private List<PropertyInfo> GetPrimaryKey(Type type, IDbContext dbContext = null, bool useConf = false) {
+			var typeAccessor = TypeAccessor.Get(type, null);
+
+            if (useConf && dbContext != null) {
+                var dbCtx = dbContext as DbContext;
+				var primaryKey = dbCtx.Model.FindEntityType(type).FindPrimaryKey();
+				return typeAccessor.Context.Properties.Where(x => primaryKey.Properties.Any(m => m.Name == x.Member.Name)).Select(x=>x.Member).ToList();
+            }
+
+            var keyProperties = typeAccessor.Context.Properties.Where(x => x.Attributes.Any(m => m is KeyAttribute)).Select(x => x.Member).ToList();
             if (keyProperties.Count == 0) {
-                var idKeyProperty = TypeAccessor.Get(type, null).Context.Properties.FirstOrDefault(x => x.Member.Name == Entity.IdKey)?.Member;
+                var idKeyProperty = typeAccessor.Context.Properties.FirstOrDefault(x => x.Member.Name == Entity.IdKey)?.Member;
                 if (idKeyProperty == null) throw new InvalidDataException($"invalid type for migration with the type {type.Name}");
 
                 keyProperties.Add(idKeyProperty);
             }
 			return keyProperties;
         }
-
 
         private void Execute() {
 			_semaphoreSlim.Wait();

@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 
 namespace Magicube.Data.Abstractions {
-	public interface IMigrationManager {
+    public interface IMigrationManager {
         void BuildTable<T>() where T : Entity;
-        void BuildTable(Type type);
+        void BuildTable(Type type, IDbContext dbContext, bool useConf = false);
         void BuildTable(IDbTable table);
-        string GetTableName(Type type);
+        string GetTableName(Type type, IDbContext dbContext = null, bool useConf = false);
         bool TableExists(string tableName);
         void SchemaUp();
         void SchemaDown();
@@ -18,7 +18,7 @@ namespace Magicube.Data.Abstractions {
 
         }
 
-        public void BuildTable(Type type) {
+        public void BuildTable(Type type, IDbContext dbContext, bool useConf = false) {
 
         }
 
@@ -26,7 +26,7 @@ namespace Magicube.Data.Abstractions {
 
         }
 
-        public string GetTableName(Type type) {
+        public string GetTableName(Type type, IDbContext dbContext = null, bool useConf = false) {
             var attr = type.GetCustomAttribute<TableAttribute>();
             if (attr != null) return attr.Name;
             return type.Name;

@@ -2,7 +2,6 @@
 using Magicube.Core;
 using Magicube.Core.Models;
 using Magicube.Data.Abstractions;
-using Magicube.Data.Abstractions.EfDbContext;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System;
@@ -10,23 +9,27 @@ using System.Diagnostics;
 
 namespace Magicube.Data.Migration {
     public class DefaultMigration : AutoReversingMigration {
-        private readonly IEntityBuilder _entityBuilder;
+        private readonly IDbContext _dbContext;
+        private readonly DatabaseOptions _options;
         private readonly IMigrationManager _migrationManager;
         private readonly IRepository<DbTable, int> _tableRepo;
 
         public DefaultMigration(
-            IEntityBuilder entityBuilder,
+            IDbContext dbContext,
             IServiceProvider serviceProvider,
-            IRepository<DbTable, int> tableRepo,             
+            IRepository<DbTable, int> tableRepo,
+            IOptions<DatabaseOptions> dbOptions,
             IOptionsSnapshot<MigrationOption> options) {
             _tableRepo        = tableRepo;
-            _entityBuilder    = entityBuilder;
+            _options          = dbOptions.Value;
             _migrationManager = options.Value.Name.IsNullOrEmpty() ? serviceProvider.GetService<IMigrationManager>() :  serviceProvider.GetService<IMigrationManager>(options.Value.Name);
+
+            _dbContext        = dbContext;
         }
 
         public override void Up() {
-            foreach(var type in _entityBuilder.Entities) {
-                _migrationManager.BuildTable(type);
+            foreach(var item in _options.EntityConfs) {
+                _migrationManager.BuildTable(item.Key, _dbContext, item.Value != null);
             }
 
             if(Schema.Table(nameof(DbTable)).Exists()) {
