@@ -8,10 +8,10 @@ using System;
 namespace Magicube.Forms.Services {
     public class DbTableService : EntityViewModelService<DbTable, int, DbTableViewModel> {
         public DbTableService(
+            Application app,
             IMapperProvider mapper,
-            IEventProvider eventProvider,
-            IRepository<DbTable, int> tableRepository
-            ) : base(mapper, eventProvider, tableRepository) {
+            IEventProvider eventProvider
+            ) : base(app, mapper, eventProvider) {
         }
 
         protected override void ParseEntity(DbTable entity, DbTableViewModel viewModel) {

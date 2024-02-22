@@ -1,10 +1,8 @@
 ﻿using Magicube.Core;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MQTTnet;
 using MQTTnet.Client;
-using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Channels;
@@ -23,7 +21,7 @@ namespace Magicube.MessageService.MQTT {
             ILogger<MqttConsumerProvider> logger, 
             IOptions<MessageOptions> options,
             IOptions<MqttOptions> mqttOptions,
-            IServiceScopeFactory serviceScopeFactory) : base(options, serviceScopeFactory) {
+            Application app) : base(options, app) {
             _logger      = logger;
             _channel     = Channel.CreateBounded<IMessageBody>(10);
             _mqttClient  = new MqttFactory().CreateMqttClient();
@@ -35,7 +33,7 @@ namespace Magicube.MessageService.MQTT {
         }
 
         public async Task HandleApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs eventArgs) {
-            var receivedMessage = new MessageBody(eventArgs.ApplicationMessage.Payload, eventArgs.ApplicationMessage.Topic);
+            var receivedMessage = new MessageBody(eventArgs.ApplicationMessage.PayloadSegment, eventArgs.ApplicationMessage.Topic);
             await _channel.Writer.WriteAsync(receivedMessage).ConfigureAwait(false);
         }
 
@@ -43,7 +41,7 @@ namespace Magicube.MessageService.MQTT {
             if(Interlocked.CompareExchange(ref _isStart, 1,0) == 0) {
                 return Task.Factory.StartNew(async () => {
                     var msg = await _channel.Reader.ReadAsync(cancellationToken).ConfigureAwait(false);
-                    using (var scope = ServiceScopeFactory.CreateScope()) {
+                    using (var scope = Application.CreateScope()) {
                         var consumer = MatchConsumer(msg.Headers, scope);
                         if (consumer == null) {
                             Trace.WriteLine($"could not find consumer with header=>{msg.Headers}");

@@ -18,11 +18,11 @@ namespace Magicube.Autoroute.Abstractions {
         private int _initialized;
         private ImmutableDictionary<string, AutorouteEntry> _paths = ImmutableDictionary<string, AutorouteEntry>.Empty;
 
-        private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly Application _app;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
-        public AuthrouteEntriesProvider(IServiceScopeFactory serviceScopeFactory) {
-            _serviceScopeFactory = serviceScopeFactory;
+        public AuthrouteEntriesProvider(Application app) {
+            _app = app;
         }
 
         public async Task<(bool,AutorouteEntry)> TryGetAutorouteEntryAsync(string path) {
@@ -68,8 +68,8 @@ namespace Magicube.Autoroute.Abstractions {
 
         private async Task EnsureInitializedAsync() {
             if (Interlocked.CompareExchange(ref _initialized, 1, 0) == 0) {
-                using (var scope = _serviceScopeFactory.CreateScope()) {
-                    var repository = scope.ServiceProvider.GetService<IRepository<AutorouteEntry, long>>();
+                using (var scope = _app.CreateScope()) {
+                    var repository = scope.GetService<IRepository<AutorouteEntry, long>>();
                     var datas = await repository.QueryAsync(x => x.Path != null && x.Status == EntityStatus.Actived);
                     foreach (var entry in datas) {
                         _paths.SetItem(entry.Path, entry);

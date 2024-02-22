@@ -1,5 +1,4 @@
 ﻿using Magicube.Core;
-using Microsoft.Extensions.DependencyInjection;
 using NCrontab;
 using System;
 using System.Threading;
@@ -12,7 +11,7 @@ namespace Magicube.ScheduleBackgroundTask {
         private readonly CrontabSchedule _schedule;
         private DateTime _nextRun;
 
-        public SchedulerBackgroundTask(IServiceScopeFactory serviceScopeFactory) : base( serviceScopeFactory) {
+        public SchedulerBackgroundTask(Application app) : base( app) {
             _schedule = CrontabSchedule.Parse(Schedule);
             _nextRun  = _schedule.GetNextOccurrence(DateTime.Now);
         }

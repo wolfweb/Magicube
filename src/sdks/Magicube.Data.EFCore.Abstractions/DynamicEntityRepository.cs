@@ -1,4 +1,5 @@
-﻿using Magicube.Core.Models;
+﻿using Magicube.Core;
+using Magicube.Core.Models;
 using Magicube.Core.Signals;
 using Magicube.Data.Abstractions.EfDbContext;
 using Magicube.Data.Abstractions.SqlBuilder;
@@ -24,24 +25,24 @@ namespace Magicube.Data.Abstractions {
 		public static ConcurrentBag<DbTable> Tables = new ConcurrentBag<DbTable>();
 
 		public DynamicEntityRepository(
-			IServiceScopeFactory serviceScopeFactory,
+			Application app,
 			IRepository<DbTable, int> dbTableRepository,
 			IOptions<DynamicDataSourceOptions> options,
 			ISignal signal
 			) {
-			_scoped = serviceScopeFactory.CreateScope();
+			_signal                   = signal;
+			_scoped                   = app.CreateScope();
 			_dynamicDataSourceOptions = options.Value;
-			_dbTableRepository = dbTableRepository;
-			_signal = signal;
-			_defaultDbContext = _scoped.ServiceProvider.GetService<IDbContext>() as DefaultDbContext;
-			_sqlBuilder = _scoped.ServiceProvider.GetService<ISqlBuilder>();
+			_dbTableRepository        = dbTableRepository;
+			_defaultDbContext         = _scoped.ServiceProvider.GetService<IDbContext>() as DefaultDbContext;
+			_sqlBuilder               = _scoped.ServiceProvider.GetService<ISqlBuilder>();
 		}
 
 		public IServiceScope ServiceScope => _scoped;
 
-		public IDbContext DbContext => _defaultDbContext;
-
-		public IChangeToken ChangeToken { get; private set; }
+		public IDbContext    DbContext    => _defaultDbContext;
+							 
+		public IChangeToken  ChangeToken  { get; private set; }
 
 		public virtual async Task<IEnumerable<DynamicEntityType>> GetAllTypes() {
 			await EnsureInitialize();

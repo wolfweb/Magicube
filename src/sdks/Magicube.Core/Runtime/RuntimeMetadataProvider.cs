@@ -7,13 +7,13 @@ using System.Linq;
 
 namespace Magicube.Core.Runtime {
     public class RuntimeMetadataProvider {
+        private readonly Application _app;
         private readonly IServiceCollection _services;
-        private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly StaticRuntimeMetadataOptions _runtimeMetadataOptions;
         private readonly ConcurrentBag<RuntimeMetadata> _metadatas = new ConcurrentBag<RuntimeMetadata>();
-        public RuntimeMetadataProvider(IServiceCollection services, IServiceScopeFactory serviceScopeFactory, IOptions<StaticRuntimeMetadataOptions> options) {
-            _services               = services;
-            _serviceScopeFactory    = serviceScopeFactory;
+        public RuntimeMetadataProvider(IServiceCollection services, Application app, IOptions<StaticRuntimeMetadataOptions> options) {
+            _app      = app;
+            _services = services;
 
             _runtimeMetadataOptions = options.Value;
 
@@ -35,24 +35,24 @@ namespace Magicube.Core.Runtime {
             Type typeInterface;
             object typeInstance = null;
 
-            using (var scope = _serviceScopeFactory.CreateScope()) {
+            using (var scope = _app.CreateScope()) {
                 if (methodProvider.DeclaredType.IsInterface) {
                     if (methodProvider.DeclaredType.IsGenericType) {
                         var specialInterface = methodProvider.DeclaredType.GetInterfaces().FirstOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IRuntimeMetadata<>));
                         if (specialInterface != null) {
                             typeInterface = specialInterface.GetGenericArguments().First();
-                            var services = scope.ServiceProvider.GetServices(typeInterface);
+                            var services = scope.GetServices(typeInterface);
                             typeInstance = services.FirstOrDefault(x => x.GetType() == methodProvider.DeclaredType);
                         }
                     } else {
-                        typeInstance = scope.ServiceProvider.GetService(methodProvider.DeclaredType);
+                        typeInstance = scope.GetService(methodProvider.DeclaredType);
                     }
                 } else {
                     typeInterface = methodProvider.DeclaredType.GetInterfaces().FirstOrDefault(x => x != typeof(IRuntimeMetadata));
                     if (typeInterface != null) {
-                        typeInstance = scope.ServiceProvider.GetService(typeInterface);
+                        typeInstance = scope.GetService(typeInterface);
                     } else {
-                        typeInstance = scope.ServiceProvider.GetService(methodProvider.DeclaredType);
+                        typeInstance = scope.GetService(methodProvider.DeclaredType);
                     }
                 }
             }

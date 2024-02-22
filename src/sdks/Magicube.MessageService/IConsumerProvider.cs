@@ -17,10 +17,10 @@ namespace Magicube.MessageService {
     public abstract class BaseConsumerProvider : IConsumerProvider {
         protected const string ServiceScopeKey = "ServiceScope";
         protected readonly MessageOptions MessageOptions;
-        protected readonly IServiceScopeFactory ServiceScopeFactory;
-        protected BaseConsumerProvider(IOptions<MessageOptions> options, IServiceScopeFactory serviceScopeFactory) {
-            MessageOptions      = options.Value;
-            ServiceScopeFactory = serviceScopeFactory;
+        protected readonly Application Application;
+        protected BaseConsumerProvider(IOptions<MessageOptions> options, Application app) {
+            Application    = app;
+            MessageOptions = options.Value;
         }
 
         public abstract Task StartAsync(CancellationToken cancellationToken = default);
@@ -44,14 +44,14 @@ namespace Magicube.MessageService {
         public DefaultConsumerProvider(
             IOptions<MessageOptions> options,
             IOptions<DefaultMessageOptions> defaultMessageoptions,
-            IServiceScopeFactory serviceScopeFactory) : base(options, serviceScopeFactory) { 
+            Application app) : base(options, app) { 
             _reader = defaultMessageoptions.Value.MessageServiceProvider.Reader;
         }
 
         public override async Task StartAsync(CancellationToken cancellationToken = default) {
             while (await _reader.WaitToReadAsync(cancellationToken)) {
                 var data = await _reader.ReadAsync(cancellationToken) as MessageBody;
-                using (var scope = ServiceScopeFactory.CreateScope()) {
+                using (var scope = Application.CreateScope()) {
                     try {
                         var consumer = MatchConsumer(data.Headers, scope);
                         var _consumerStore = scope.ServiceProvider.GetService<IMessageStore>();

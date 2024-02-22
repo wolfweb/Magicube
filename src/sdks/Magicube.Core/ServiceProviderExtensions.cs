@@ -44,5 +44,21 @@ namespace Magicube.Core {
             if (service == null) return default;
             return (T)service;
         }
+
+        public static T GetService<T>(this IServiceScope scope) {
+            return scope.ServiceProvider.GetService<T>();
+        }
+
+        public static object GetService(this IServiceScope scope, Type type) {
+            return scope.ServiceProvider.GetService(type);
+        }
+
+        public static IEnumerable<object> GetServices(this IServiceScope scope, Type type) {
+            return scope.ServiceProvider.GetServices(type);
+        }
+
+        public static IEnumerable<T> GetServices<T>(this IServiceScope scope) {
+            return scope.ServiceProvider.GetServices<T>();
+        }
     }
 }

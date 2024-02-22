@@ -1,17 +1,17 @@
-﻿using Magicube.Net.Email;
+﻿using Magicube.Core;
+using Magicube.Net.Email;
 using Magicube.ScheduleBackgroundTask;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Magicube.Email.BackgroundTask {
     public class SchedulerEmailSenderTask : SchedulerBackgroundTask {
-        public SchedulerEmailSenderTask(IServiceScopeFactory serviceScopeFactory) : base(serviceScopeFactory) { }
+        public SchedulerEmailSenderTask(Application app) : base(app) { }
 
-        public override async Task ProcessInScope(CancellationToken stoppingToken, IServiceProvider serviceProvider) {
-            IEmailSender _emailSender = serviceProvider.GetService<IEmailSender>();
-            ISchedulerMessageProvider _schedulerMessageProvider = serviceProvider.GetService<ISchedulerMessageProvider>();
+        public override async Task ProcessInScope(CancellationToken stoppingToken, IServiceScope scopeService) {
+            IEmailSender _emailSender = scopeService.GetService<IEmailSender>();
+            ISchedulerMessageProvider _schedulerMessageProvider = scopeService.GetService<ISchedulerMessageProvider>();
             var _template = await _schedulerMessageProvider.Get();
             await _emailSender.SendAsync(_emailSender.Sender, _template.Subject, _template.Body);
         }

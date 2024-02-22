@@ -1,18 +1,30 @@
-﻿using Magicube.Data.Abstractions;
+﻿using Magicube.Core;
+using Magicube.Data.Abstractions;
 using Magicube.Eventbus;
-using System;
+using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 
 namespace Magicube.Web {
     public class EntityBaseService<TEntity, TKey> where TEntity : class, IEntity<TKey> {
-        protected readonly IEventProvider EventProvider;
-        protected readonly IRepository<TEntity, TKey> Repository;
+        private IRepository<TEntity, TKey> _repository;
+
+        protected IEventProvider EventProvider { get; }
+        protected IServiceScope  ServiceScope  { get; }
+
+        protected IRepository<TEntity, TKey> Repository {
+            get {
+                if(_repository == null) {
+                    _repository = ServiceScope.GetService<IRepository<TEntity, TKey>>();
+                }
+                return _repository;
+            }
+        }
 
         public EntityBaseService(
             IEventProvider eventProvider,
-            IRepository<TEntity, TKey> repository
+            Application app
             ) {
-            Repository = repository;
+            ServiceScope  = app.CreateScope();
             EventProvider = eventProvider;
         }
 

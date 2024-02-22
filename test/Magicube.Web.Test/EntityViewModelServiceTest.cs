@@ -58,7 +58,7 @@ namespace Magicube.Web.Test {
     }
 
     public class FooEntityViewModelService : EntityViewModelService<FooEntity, int, FooViewModel> {
-        public FooEntityViewModelService(IMapperProvider mapper, IEventProvider eventProvider, IRepository<FooEntity, int> repository) : base(mapper, eventProvider, repository) {
+        public FooEntityViewModelService(IMapperProvider mapper, IEventProvider eventProvider, Application app) : base(app, mapper, eventProvider) {
         }
     }
 }

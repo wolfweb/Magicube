@@ -1,6 +1,6 @@
-﻿using Magicube.Quartz.Jobs;
+﻿using Magicube.Core;
+using Magicube.Quartz.Jobs;
 using Magicube.Quartz.Web.Models;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace Magicube.Quartz.Web.Jobs {
     public class RepositoryJobHandler : JobBaseHandler {
-        private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly Application _app;
         public RepositoryJobHandler(
             ILogger logger,
+            Application app,
             IStringLocalizer localizer,
-            IOptions<JobOptions> options,
-            IServiceScopeFactory serviceScopeFactory
+            IOptions<JobOptions> options
             ) : base(logger, localizer, options) {
-            _serviceScopeFactory = serviceScopeFactory;
+            _app = app;
         }
 
         public override string JobType => L["数据操作"];

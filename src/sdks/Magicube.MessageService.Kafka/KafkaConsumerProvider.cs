@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using Magicube.Core;
 
 namespace Magicube.MessageService.Kafka {
     public class KafkaConsumerProvider : BaseConsumerProvider, IDisposable {
@@ -16,11 +17,11 @@ namespace Magicube.MessageService.Kafka {
         private int _isStart = 0;
 
         public KafkaConsumerProvider(
+            Application app,
             IOptions<MessageOptions> options,
             IOptions<KafkaOptions> kafkaOptions,
-            ILogger<KafkaConsumerProvider> logger,
-            IServiceScopeFactory serviceScopeFactory
-            ) : base(options, serviceScopeFactory) {
+            ILogger<KafkaConsumerProvider> logger
+            ) : base(options, app) {
             _logger             = logger;
             _kafkaOptions       = kafkaOptions.Value;
             Initialize();
@@ -44,7 +45,7 @@ namespace Magicube.MessageService.Kafka {
                     headers.Add("Offset", message.Offset);
                     headers.Add("Partition", message.Partition);
 
-                    using (var scope = ServiceScopeFactory.CreateScope()) {
+                    using (var scope = Application.CreateScope()) {
                         var consumer = MatchConsumer(headers, scope);
                         if (consumer == null) {
                             Trace.WriteLine($"not consumer for kafka with topic=>{message.Topic}");

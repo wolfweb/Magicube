@@ -1,5 +1,5 @@
 ﻿using Magicube.Cache.Redis;
-using Microsoft.Extensions.DependencyInjection;
+using Magicube.Core;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 using System.Diagnostics;
@@ -14,8 +14,8 @@ namespace Magicube.MessageService.Redis {
         public RedisMessageConsumerProvider(
             IOptions<MessageOptions> options,
             IRedisResolve redisResolve,
-            IServiceScopeFactory serviceScopeFactory
-            ) : base(options, serviceScopeFactory) {
+            Application app
+            ) : base(options, app) {
             var conn = redisResolve.GetConnectionMultiplexer();
             _subscriber = conn.GetSubscriber();
         }
@@ -23,7 +23,7 @@ namespace Magicube.MessageService.Redis {
         public override async Task StartAsync(CancellationToken cancellationToken = default) {
             var topics = MessageOptions.Consumers.Select(x => x.Key);
             foreach (var topic in topics) {
-                using (var scope = ServiceScopeFactory.CreateScope()) {
+                using (var scope = Application.CreateScope()) {
                     var consumer = MatchConsumer(topic, scope);
                     if (consumer == null) {
                         Trace.WriteLine($"not consumer for kafka with topic=>{topic}");

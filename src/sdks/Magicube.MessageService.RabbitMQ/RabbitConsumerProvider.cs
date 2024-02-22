@@ -8,7 +8,6 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Collections.Concurrent;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,20 +19,20 @@ namespace Magicube.MessageService.RabbitMQ {
         private readonly ConcurrentDictionary<string, ConsumerRunner> ConsumerRunners = new ConcurrentDictionary<string, ConsumerRunner>();
 
         public RabbitConsumerProvider(
+            ILogger<RabbitConsumerProvider> logger,
             IOptions<MessageOptions> options,
             RabbitMessageBuilder builder,
-            IServiceScopeFactory serviceScopeFactory,
-            ILogger<RabbitConsumerProvider> logger
-            ) : base(options, serviceScopeFactory) {
+            Application app
+            ) : base(options, app) {
             _logger            = logger;
             _endpoint          = builder.ConsumerEndpoint;
-            _connectionFactory = ServiceScopeFactory.CreateScope().ServiceProvider.GetRequiredService<IRabbitConnectionFactory>();
+            _connectionFactory = Application.CreateScope().ServiceProvider.GetRequiredService<IRabbitConnectionFactory>();
         }
 
         public override async Task StartAsync(CancellationToken cancellationToken = default) {
             foreach(var consumer in MessageOptions.Consumers) {
                 var (channel, queueName) = _connectionFactory.GetChannel(_endpoint);
-                using (var scope = ServiceScopeFactory.CreateScope()) {
+                using (var scope = Application.CreateScope()) {
                     var _consumer = scope.ServiceProvider.Resolve<IConsumer>(consumer.ConsumerType);
                     var runner = new ConsumerRunner(queueName, _endpoint, _consumer, channel, scope);
                     ConsumerRunners.TryAdd(queueName, runner);

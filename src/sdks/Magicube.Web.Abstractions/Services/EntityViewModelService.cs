@@ -17,10 +17,10 @@ namespace Magicube.Web {
         protected readonly IMapperProvider Mapper;
 
         public EntityViewModelService(
+            Application app,
             IMapperProvider mapper,
-            IEventProvider eventProvider,
-            IRepository<TEntity, TKey> repository
-            ) : base(eventProvider, repository) {
+            IEventProvider eventProvider
+            ) : base(eventProvider, app) {
             Mapper = mapper;
         }
 

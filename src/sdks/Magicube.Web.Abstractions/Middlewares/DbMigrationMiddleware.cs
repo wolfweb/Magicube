@@ -1,4 +1,5 @@
-﻿using Magicube.Core.Signals;
+﻿using Magicube.Core;
+using Magicube.Core.Signals;
 using Magicube.Data.Abstractions;
 using Magicube.Data.Migration;
 using Microsoft.AspNetCore.Http;
@@ -8,12 +9,12 @@ using System.Threading.Tasks;
 namespace Magicube.Web.Middlewares {
     public class DbMigrationMiddleware {
         private readonly ISignal _signal;
+        private readonly Application _app;
         private readonly RequestDelegate _next;
-        private readonly IServiceScopeFactory _serviceScopeFactory;
-        public DbMigrationMiddleware(RequestDelegate next, ISignal signal, IServiceScopeFactory serviceScopeFactory) {
-            _next                = next;
-            _signal              = signal;
-            _serviceScopeFactory = serviceScopeFactory;
+        public DbMigrationMiddleware(RequestDelegate next, ISignal signal, Application app) {
+            _app    = app;
+            _next   = next;
+            _signal = signal;
         }
 
         public Task Invoke(HttpContext httpContext) {
@@ -22,8 +23,8 @@ namespace Magicube.Web.Middlewares {
             if (!exist) {
                 //todo ： 非线程安全，
                 changeToken.RegisterChangeCallback(m => {
-                    using (var scoped = _serviceScopeFactory.CreateScope()) {
-                        var migration = scoped.ServiceProvider.GetRequiredService<IMigrationManagerFactory>().GetMigrationManager();
+                    using (var scoped = _app.CreateScope()) {
+                        var migration = scoped.GetService<IMigrationManagerFactory>().GetMigrationManager();
                         migration.SchemaUp();
                     }
                 }, null);

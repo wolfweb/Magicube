@@ -59,9 +59,9 @@ namespace Magicube.LightApp.Wechat {
 
     public class SenparcSettingSetup : IPostConfigureOptions<SenparcSetting> {
         public const string Key = "SenparcSetting";
-        private readonly IServiceScopeFactory _serviceScopeFactory;
-        public SenparcSettingSetup(IServiceScopeFactory serviceScopeFactory) {
-            _serviceScopeFactory = serviceScopeFactory;
+        private readonly Application _app;
+        public SenparcSettingSetup(Application app) {
+            _app = app;
         }
 
         public void PostConfigure(string name, SenparcSetting options) {
@@ -71,9 +71,9 @@ namespace Magicube.LightApp.Wechat {
 
     public class SenparcWeixinSettingSetup : IPostConfigureOptions<SenparcWeixinSetting> {
         public const string Key = "SenparcWeixinSetting";
-        private readonly IServiceScopeFactory _serviceScopeFactory;
-        public SenparcWeixinSettingSetup(IServiceScopeFactory serviceScopeFactory) {
-            _serviceScopeFactory = serviceScopeFactory;
+        private readonly Application _app;
+        public SenparcWeixinSettingSetup(Application app) {
+            _app = app;
         }
 
         public void PostConfigure(string name, SenparcWeixinSetting options) {

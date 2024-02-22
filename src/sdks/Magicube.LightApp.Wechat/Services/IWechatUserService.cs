@@ -20,17 +20,17 @@ namespace Magicube.LightApp.Wechat {
 
         private readonly ICacheProvider _cacheProvider;
         private readonly IEventProvider _eventProvider;
+        private readonly IServiceProvider _serviceProvider;
         private readonly SenparcWeixinSetting _senparcWeixinSetting;
-        private readonly IRepository<WechatUser, long> _wechatUserRep;
 
         public WechatUserService(
             IOptions<SenparcWeixinSetting> options, 
-            IRepository<WechatUser, long> wechatUserRep,
             IEventProvider eventProvider, 
             IServiceProvider serviceProvider) {
             _eventProvider        = eventProvider;
-            _wechatUserRep        = wechatUserRep;
+            _serviceProvider      = serviceProvider;
             _senparcWeixinSetting = options.Value;
+
             _cacheProvider        = serviceProvider.GetService<ICacheProvider>(DefaultCacheProvider.Identity);
         }
 
@@ -42,6 +42,8 @@ namespace Magicube.LightApp.Wechat {
                 Expression<Func<WechatUser, bool>> query = user => jsonResult.unionid.IsNullOrEmpty() ? 
                                 user.OpenId == jsonResult.openid : 
                                 user.UnionId == jsonResult.unionid;
+                using var scoped = _serviceProvider.CreateScope();
+                var _wechatUserRep = scoped.GetService<IRepository<WechatUser, long>>();
 
                 var wechatUser = _wechatUserRep.All.SingleOrDefault(query);
                 if(wechatUser == null) {
@@ -97,6 +99,9 @@ namespace Magicube.LightApp.Wechat {
         }
 
         private async Task UpdateWechatUserProfile(long userId, WechatUser user) {
+            using var scoped = _serviceProvider.CreateScope();
+            var _wechatUserRep = scoped.GetService<IRepository<WechatUser, long>>();
+
             var wechatUser = await _wechatUserRep.GetAsync(userId);
 
             wechatUser.NickName  = user.NickName;

@@ -23,7 +23,7 @@ namespace Magicube.Core {
             RunFramework    = RuntimeInformation.FrameworkDescription;
         }
 
-        public IServiceScope BeginScope() => ServiceProvider.CreateScope();
+        public IServiceScope CreateScope() => ServiceProvider.CreateScope();
 
         public IEnumerable<ModularInfo> Modulars        { get; set; }
 
