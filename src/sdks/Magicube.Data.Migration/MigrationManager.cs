@@ -88,8 +88,9 @@ namespace Magicube.Data.Migration {
 			var tableName = GetTableName(type, dbContext, useConf);
             var schema = Database.Schema.Table(tableName);
 			var fields = TypeAccessor.Get(type, null).Context.Properties;
+			fields = Filter(type, fields);
 
-			IEntityType entityType = null;
+            IEntityType entityType = null;
 			if (useConf) {
                 var dbCtx = dbContext as DbContext;
                 entityType = dbCtx.Model.FindEntityType(type);
@@ -409,14 +410,14 @@ namespace Magicube.Data.Migration {
 			}
 		}
 
-		private (ColumnExtendAttribute, ForeignKeyAttribute) GetColumnName(PropertyInfo propertyInfo, out string columnName) {
-            var foreignKey = propertyInfo.GetCustomAttribute<ForeignKeyAttribute>();
-            var columnAttr = propertyInfo.GetCustomAttribute<ColumnExtendAttribute>();
+		protected virtual IEnumerable<PropertyInfoExplorer> Filter(Type type, IEnumerable<PropertyInfoExplorer> fields) {
+			foreach(var field in fields) {
+				if (field.Member.DeclaringType != type && !field.Member.DeclaringType.IsAbstract) 
+					continue;
 
-            columnName = columnAttr != null && !columnAttr.Name.IsNullOrEmpty() ? columnAttr.Name : propertyInfo.Name;
-            columnName = foreignKey != null ? $"{propertyInfo.Name}{foreignKey.Name}" : columnName;
-			return (columnAttr, foreignKey);
-        }
+				yield return field;
+			}
+		}
 
 		private IList<ColumnDefinition> BuildPrimaryKey(string tableName, Type type) {
 			var keyProperties = GetPrimaryKey(type);
@@ -439,6 +440,15 @@ namespace Magicube.Data.Migration {
 
 			return result;
 		}
+
+		private (ColumnExtendAttribute, ForeignKeyAttribute) GetColumnName(PropertyInfo propertyInfo, out string columnName) {
+            var foreignKey = propertyInfo.GetCustomAttribute<ForeignKeyAttribute>();
+            var columnAttr = propertyInfo.GetCustomAttribute<ColumnExtendAttribute>();
+
+            columnName = columnAttr != null && !columnAttr.Name.IsNullOrEmpty() ? columnAttr.Name : propertyInfo.Name;
+            columnName = foreignKey != null ? $"{propertyInfo.Name}{foreignKey.Name}" : columnName;
+			return (columnAttr, foreignKey);
+        }
 
 		private List<PropertyInfo> GetPrimaryKey(Type type, IDbContext dbContext = null, bool useConf = false) {
 			var typeAccessor = TypeAccessor.Get(type, null);
