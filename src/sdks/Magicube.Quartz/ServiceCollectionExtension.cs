@@ -21,6 +21,7 @@ namespace Magicube.Quartz {
 
                 services.AddSingleton(builder);
             })
+            .AddSingleton(x => x.GetService<ISchedulerFactory>().GetScheduler().Result)
             .AddScoped<IJobService, JobService>()
             .Configure<JobOptions>(x => { 
 

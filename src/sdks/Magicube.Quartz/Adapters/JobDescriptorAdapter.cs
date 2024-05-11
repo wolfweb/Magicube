@@ -35,21 +35,42 @@ namespace Magicube.Quartz.Jobs {
                 builder.UsingJobData(new JobDataMap(_jobDescription.JobData.ToDictionary()));
             }
 
-            if (_jobDescription.Schedule.TimeOf != null) {
-                int hour   = _jobDescription.Schedule.TimeOf.Hour,
-                    minute = _jobDescription.Schedule.TimeOf.Minute,
-                    second = _jobDescription.Schedule.TimeOf.Second;
+            if (_jobDescription.Schedule.DateTimeOf != null) {
+                int hour = _jobDescription.Schedule.DateTimeOf.Hour,
+                    minute = _jobDescription.Schedule.DateTimeOf.Minute,
+                    second = _jobDescription.Schedule.DateTimeOf.Second,
+                    day = _jobDescription.Schedule.DateTimeOf.Day;
 
-                DateTime startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, hour, minute, second, DateTimeKind.Local);
                 if (_jobDescription.Schedule.RepeatCount > 0) {
-                    builder.WithDailyTimeIntervalSchedule(x => {
-                        x.WithIntervalInHours(24)
-                        .OnEveryDay()
-                        .WithRepeatCount(_jobDescription.Schedule.RepeatCount)
-                        .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(hour, minute));                        
-                    }).StartNow();
-                } else {
-                    builder.WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(hour, minute)).StartNow();
+                    if (_jobDescription.Schedule.IntervalType == IntervalUnit.Month || _jobDescription.Schedule.IntervalType == IntervalUnit.Week || _jobDescription.Schedule.IntervalType == IntervalUnit.Day) {
+                        builder.WithSimpleSchedule(x => {
+                            x.WithRepeatCount(_jobDescription.Schedule.RepeatCount);
+                        }).StartAt(_jobDescription.Schedule);
+                    }
+                    else {
+                        builder.WithDailyTimeIntervalSchedule(x => {
+                            x.WithRepeatCount(_jobDescription.Schedule.RepeatCount)
+                            .WithIntervalInHours(24)
+                            .OnEveryDay()
+                            .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(hour, minute));
+
+                            if (_jobDescription.Schedule.DateTimeOf.DayOfWeek.HasValue) {
+                                x.OnDaysOfTheWeek(_jobDescription.Schedule.DateTimeOf.DayOfWeek.Value);
+                            }
+                        }).StartNow();
+                    }
+                }
+                else {
+                    if (_jobDescription.Schedule.IntervalType == IntervalUnit.Month) {
+                        builder.WithSchedule(CronScheduleBuilder.MonthlyOnDayAndHourAndMinute(_jobDescription.Schedule.DateTimeOf.Day, hour, minute)).StartNow();
+                    }
+                    else if (_jobDescription.Schedule.IntervalType == IntervalUnit.Week) {
+                        if (_jobDescription.Schedule.DateTimeOf.DayOfWeek == null) throw new QuartzException("周计划任务请设置DayOfWeek");
+                        builder.WithSchedule(CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(_jobDescription.Schedule.DateTimeOf.DayOfWeek.Value, hour, minute)).StartNow();
+                    }
+                    else if (_jobDescription.Schedule.IntervalType == IntervalUnit.Day) {
+                        builder.WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(hour, minute)).StartNow();
+                    }
                 }
             } else {
                 var timespan = BuildInterval(_jobDescription.Schedule.IntervalType, _jobDescription.Schedule.IntervalStep);
@@ -70,10 +91,10 @@ namespace Magicube.Quartz.Jobs {
             switch (unit) {
                 case IntervalUnit.Second:
                     return TimeSpan.FromSeconds(step);
-                case IntervalUnit.Hour:
-                    return TimeSpan.FromHours(step);
                 case IntervalUnit.Minute:
                     return TimeSpan.FromMinutes(step);
+                case IntervalUnit.Hour:
+                    return TimeSpan.FromHours(step);
                 default:
                     return TimeSpan.FromMinutes(step);
             }

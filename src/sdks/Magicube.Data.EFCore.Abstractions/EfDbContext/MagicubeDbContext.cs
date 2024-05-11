@@ -16,7 +16,6 @@ namespace Magicube.Data.Abstractions.EfDbContext {
     }
 
     public class MagicubeDbContext : DefaultDbContext, IUnitOfWork {
-        private IDbContextTransaction _transaction;
         private readonly IEntityBuilder _entityBuilder;
         private readonly MagicubeDbContextFactory _magicubeDbContextFactory;
         public MagicubeDbContext(
@@ -37,26 +36,24 @@ namespace Magicube.Data.Abstractions.EfDbContext {
             _magicubeDbContextFactory.Configure(optionsBuilder);
         }
 
-        public void BeginTransaction() {
-            if (_transaction == null)
-                _transaction = Database.BeginTransaction();
+        public IUnitOfWorkScoped BeginTransaction(){
+            return new UnitOfWorkScoped(Database.BeginTransaction());
         }
 
-        public void Commit() {
-            try {
-                _transaction?.Commit();
-                _transaction?.Dispose();
-            } finally {
-                _transaction = null;
+        sealed class UnitOfWorkScoped : IUnitOfWorkScoped {
+            private IDbContextTransaction _dbContextTransaction;
+
+            public UnitOfWorkScoped(IDbContextTransaction dbContextTransaction) {
+                _dbContextTransaction = dbContextTransaction;
             }
-        }
 
-        public void Rollback() {
-            try {
-                _transaction?.Rollback();
-                _transaction?.Dispose();
-            } finally {
-                _transaction = null;
+            public void Dispose() {
+                _dbContextTransaction.Commit();
+                _dbContextTransaction.Dispose();
+            }
+
+            public void Rollback() {
+                _dbContextTransaction.Rollback();
             }
         }
     }

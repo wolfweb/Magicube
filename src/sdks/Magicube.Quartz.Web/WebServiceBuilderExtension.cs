@@ -23,8 +23,7 @@ namespace Magicube.Web {
                 config.AddJob<MailJobHandler>(jobConfig => {
                     jobConfig.StoreDurably();
                 });
-            }).Replace<ISchedulerFactory, MagicubeSchedulerFactory>()
-            .AddSingleton<IScheduler>(x=>x.GetService<ISchedulerFactory>().GetScheduler().Result)
+            }).Replace<ISchedulerFactory, MagicubeSchedulerFactory>()            
             .AddQuartzServer(options => {
                 options.WaitForJobsToComplete = true;
             });

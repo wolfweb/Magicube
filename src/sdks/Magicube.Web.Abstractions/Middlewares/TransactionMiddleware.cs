@@ -11,17 +11,18 @@ namespace Magicube.Web.Middlewares {
         }
 
         public async Task Invoke(HttpContext context, IUnitOfWork transactionScope) {
-            transactionScope.BeginTransaction();
-            try {
-                await _next(context);
-            } catch (AggregateException) {
-                transactionScope.Rollback();
-                throw;
-            } catch (Exception) {
-                transactionScope.Rollback();
-                throw;
-            } finally {
-                transactionScope.Dispose();
+            using (var unitOfWorkScoped = transactionScope.BeginTransaction()){
+                try {
+                    await _next(context);
+                }
+                catch (AggregateException) {
+                    unitOfWorkScoped?.Rollback();
+                    throw;
+                }
+                catch (Exception) {
+                    unitOfWorkScoped?.Rollback();
+                    throw;
+                }
             }
         }
     }

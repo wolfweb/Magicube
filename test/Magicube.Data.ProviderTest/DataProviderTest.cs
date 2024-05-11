@@ -295,22 +295,20 @@ namespace Magicube.Data.ProviderTest {
             entity = rep.Get(1);
             Assert.NotNull(entity);
 
-            try {
-                transaction.BeginTransaction();
+            using (var unitOfWorkScoped = transaction.BeginTransaction()) {
+                try {
+                    entity = rep.Insert(new FooEntity { Id = 2, Name = "wolfweb", Age = 11, Born = DateTime.UtcNow });
 
-                entity = rep.Insert(new FooEntity { Id = 2, Name = "wolfweb", Age = 11, Born = DateTime.UtcNow });
-
-                entity = rep.Insert(new FooEntity { Id = 1, Name = "wolfweb", Age = 10, Born = DateTime.UtcNow });
-
-                transaction.Commit();
-            }
-            catch(AggregateException e) {
-                transaction.Rollback();
-                _testOutputHelper.WriteLine(e.Message);
-            }
-            catch (Exception e){
-                transaction.Rollback();
-                _testOutputHelper.WriteLine(e.Message);
+                    entity = rep.Insert(new FooEntity { Id = 1, Name = "wolfweb", Age = 10, Born = DateTime.UtcNow });
+                }
+                catch(AggregateException e) {
+                    unitOfWorkScoped.Rollback();
+                    _testOutputHelper.WriteLine(e.Message);
+                }
+                catch (Exception e){
+                    unitOfWorkScoped.Rollback();
+                    _testOutputHelper.WriteLine(e.Message);
+                }
             }
 
             var res = rep.Query(x => x.Id > 0);

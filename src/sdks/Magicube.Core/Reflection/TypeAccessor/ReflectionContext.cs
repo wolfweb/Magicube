@@ -41,6 +41,14 @@ namespace Magicube.Core.Reflection {
         public IEnumerable<MemberInfoExplorer>   Members       { get; }
         public IEnumerable<PropertyInfoExplorer> Properties    { get; }
 
+        public TAttr GetAttribute<TAttr>() where TAttr : Attribute {
+            return Attributes.OfType<TAttr>().FirstOrDefault();
+        }
+
+        public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : Attribute {
+            return Attributes.OfType<TAttr>();
+        }
+
         /// <summary>
         /// fields and properties
         /// </summary>

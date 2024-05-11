@@ -35,5 +35,7 @@ namespace Magicube.Quartz.Services {
         Task RemoveJob<T>() where T : IJob;
 
         Task RemoveJob<T>(string jobKey) where T : IJob;
+
+        Task RemoveJob(JobKey jobKey);
     }
 }

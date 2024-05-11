@@ -10,12 +10,12 @@ namespace Magicube.Quartz.Models {
             Second = second;
             Validate();
         }
-        public int Hour      { get; set; }
-        public int Minute    { get; set; }
-        public int Second    { get; set; }
-
-        public int DayOfWeek { get; set; }
-        public int Day       { get; set; }
+        public int Hour             { get; set; }
+        public int Minute           { get; set; }
+        public int Second           { get; set; }
+                                    
+        public int Day              { get; set; }
+        public DayOfWeek? DayOfWeek { get; set; }
 
         public string ToString(string format) {
             var result = Regex.Replace(format, "d+", Day    < 10 ? $"0{Day}"    : Day.ToString());

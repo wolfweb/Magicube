@@ -1,19 +1,25 @@
 ﻿using Magicube.Core.Reflection;
 using System;
+using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 
 namespace Magicube.Core {
     public static class New<T> {
+        private static readonly ConcurrentDictionary<Type, Func<T>> _cache = new();
+
         public static readonly Func<T> Instance;
 
         public static readonly Func<Type, T> Creator = (type) => {
-            if (type == typeof(string))
-                return Expression.Lambda<Func<T>>(Expression.Constant(string.Empty)).Compile()();
-            else if (type.HasDefaultConstructor())
-                return Expression.Lambda<Func<T>>(Expression.New(type)).Compile()();
+            var func = _cache.GetOrAdd(type, x => {
+                if (type == typeof(string))
+                    return Expression.Lambda<Func<T>>(Expression.Constant(string.Empty)).Compile();
+                else if (type.HasDefaultConstructor())
+                    return Expression.Lambda<Func<T>>(Expression.New(type)).Compile();
 
-            return (T)FormatterServices.GetUninitializedObject(type);
+                return () => (T)FormatterServices.GetUninitializedObject(type);
+            });
+            return func();
         };
 
         static New() { 

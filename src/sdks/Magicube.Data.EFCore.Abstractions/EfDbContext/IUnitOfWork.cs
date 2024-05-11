@@ -2,8 +2,10 @@
 
 namespace Magicube.Data.Abstractions.EfDbContext {
     public interface IUnitOfWork : IDisposable{
-        void BeginTransaction();
-        void Commit();
+        IUnitOfWorkScoped BeginTransaction();
+    }
+
+    public interface IUnitOfWorkScoped : IDisposable {
         void Rollback();
     }
 }

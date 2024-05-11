@@ -20,11 +20,15 @@ namespace Magicube.Quartz.Services {
 
         public async Task RegisterJob<TJob>(JobDescriptor jobDescriptor) where TJob : IJob {
             var casting = new JobDescriptorAdapter(jobDescriptor);
+            var jobDetail = casting.RetrieveJobDetail<TJob>();
+            await RemoveJob(jobDetail.Key);
             await _scheduler.ScheduleJob(casting.RetrieveJobDetail<TJob>(), casting.RetrieveJobTrigger());
         }
 
         public async Task RegisterJob(JobDescriptor jobDescriptor, Type type) {
             var casting = new JobDescriptorAdapter(jobDescriptor);
+            var jobDetail = casting.RetrieveJobDetail(type);
+            await RemoveJob(jobDetail.Key);
             await _scheduler.ScheduleJob(casting.RetrieveJobDetail(type), casting.RetrieveJobTrigger());
         }
 
@@ -169,6 +173,12 @@ namespace Magicube.Quartz.Services {
             await _scheduler.DeleteJob(_jobKey);
 
             await RemoveJobTriggers(_jobKey);
+        }
+
+        public async Task RemoveJob(JobKey jobKey) {
+            await _scheduler.DeleteJob(jobKey);
+
+            await RemoveJobTriggers(jobKey);
         }
 
         private JobKey BuildJobKey<T>() {

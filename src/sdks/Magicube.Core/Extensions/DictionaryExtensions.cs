@@ -53,5 +53,15 @@ using System.Diagnostics;
 
             return dict[key];
         }
+
+        public static bool TryGetValue<T>(this IDictionary<string, object> dictionary, string key, out T value) {
+            if (dictionary.TryGetValue(key, out var valueObj) && valueObj is T variable) {
+                value = variable;
+                return true;
+            }
+
+            value = default;
+            return false;
+        }
     }
 }
