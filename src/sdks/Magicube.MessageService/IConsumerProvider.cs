@@ -26,7 +26,7 @@ namespace Magicube.MessageService {
         public abstract Task StartAsync(CancellationToken cancellationToken = default);
         public virtual Task StopAsync() => Task.CompletedTask;
 
-        protected IConsumer MatchConsumer(MessageHeaders headers, IServiceScope scope) {
+        protected virtual IConsumer MatchConsumer(MessageHeaders headers, IServiceScope scope) {
             var key = headers[MessageHeaders.MessageHeaderKey].ToString();
             if (key.IsNullOrEmpty()) return default;
 

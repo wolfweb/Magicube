@@ -1,5 +1,5 @@
-﻿using Magicube.TestBase;
-using System.Diagnostics;
+﻿using Magicube.Core;
+using Magicube.TestBase;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
 
@@ -15,11 +15,10 @@ namespace Magicube.MessageService.Test {
 
         public const string Channel = "foo";
 
-        public string Topic => Channel;
+        public string Key => Channel;
 
         public Task ConsumeAsync(IMessageBody message, MessageContext context) {
-            _testOutputHelper.WriteLine($"redis-message foo=>{message.Value}");
-            Trace.WriteLine($"receive redis message foo=> ${message.Value}");
+            _testOutputHelper.WriteLine($"receive-message foo=>{Json.Stringify(message.Value)}");
             _atomicCounter.Next();
             return Task.CompletedTask;
         }

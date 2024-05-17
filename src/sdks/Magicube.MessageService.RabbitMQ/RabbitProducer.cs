@@ -25,8 +25,8 @@ namespace Magicube.MessageService.RabbitMQ {
         }
 
         public void Produce(object value, MessageHeaders headers) {
-            var route        = headers.TryGet<string>("route") ?? string.Empty;
-            var endpointName = headers.TryGet<string>("endpointName");
+            var route        = headers.TryGet<string>(MessageHeaders.MessageHeaderKey);
+            var endpointName = headers.TryGet<string>(RabbitMessageHeaders.ExchangeKey);
 
             if (!_rabbitChannels.TryGetValue(endpointName, out var model)) {
                 model = _connectionFactory.GetChannel(_endpoint, endpointName);

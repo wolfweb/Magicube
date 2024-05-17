@@ -26,10 +26,6 @@ namespace Magicube.MessageService {
         }
         public string Key          { get; }
         public Type   ConsumerType { get; }
-
-        public bool IsSubOf<T>() {
-            return ConsumerType.IsSubclassOf(typeof(T));
-        }
     }
 
     public class DefaultMessageOptions : MessageOptions {

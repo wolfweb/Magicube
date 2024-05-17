@@ -3,7 +3,9 @@ using Magicube.Core;
 using Magicube.MessageService.Redis;
 using Magicube.TestBase;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Moq;
 using StackExchange.Redis;
 using System;
 using System.Diagnostics;
@@ -21,11 +23,15 @@ namespace Magicube.MessageService.Test {
         public RedisMessageTest(ITestOutputHelper testOutputHelper) {
             _testOutputHelper = testOutputHelper;
 
+            var mockEnvironment = new Mock<IHostEnvironment>();
+
             ServiceProvider = new ServiceCollection()
                 .AddLogging(builder=> {
                     builder.AddProvider(new XUnitLoggerProvider(testOutputHelper));
                 })
                 .AddSingleton(x=>new AtomicCounter(0))
+                .AddSingleton(mockEnvironment.Object)
+                .AddCore()
                 .AddRedisCache()
                 .Replace<IRedisResolve, RedisResolve>()
                 .AddRedisMessage()
@@ -33,6 +39,8 @@ namespace Magicube.MessageService.Test {
                 .AddConsumer<KooConsumer>(KooConsumer.Channel)
                 .AddSingleton(_testOutputHelper)
                 .BuildServiceProvider();
+
+            ServiceProvider.GetService<Application>().ServiceProvider = ServiceProvider;
         }
 
         [Fact]
@@ -58,7 +66,7 @@ namespace Magicube.MessageService.Test {
             Task.Run(() => {
                 for (int i = 0; i < count; i++) {
                     producer.Produce(new FooEventMessage(), new MessageHeaders {
-                        ["topic"] = random.Next(1,10) % 2 == 0 ?  KooConsumer.Channel : FooConsumer.Channel
+                        ["key"] = random.Next(1,10) % 2 == 0 ?  KooConsumer.Channel : FooConsumer.Channel
                     });
                 }
             });            
@@ -74,7 +82,7 @@ namespace Magicube.MessageService.Test {
 
         sealed class RedisResolve : IRedisResolve {
             public IConnectionMultiplexer GetConnectionMultiplexer() {
-                return ConnectionMultiplexer.Connect("192.168.3.207:6379");
+                return ConnectionMultiplexer.Connect("localhost:6379");
             }
         }
     }

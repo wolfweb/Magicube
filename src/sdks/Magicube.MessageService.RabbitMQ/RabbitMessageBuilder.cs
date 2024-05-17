@@ -1,6 +1,7 @@
 ﻿using Magicube.MessageService.RabbitMQ.EndPoints;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 
 namespace Magicube.MessageService.RabbitMQ {
     public class RabbitMessageBuilder {
@@ -13,7 +14,7 @@ namespace Magicube.MessageService.RabbitMQ {
 
         public RabbitProducerEndpoint ProducerEndpoint => _rabbitMessageServiceBuilder.ProducerEndpoint;
 
-        public RabbitConsumerEndpoint ConsumerEndpoint => _rabbitMessageServiceBuilder.ConsumerEndpoint;
+        public List<RabbitConsumerEndpoint> ConsumerEndpoints => _rabbitMessageServiceBuilder.ConsumerEndpoints;
 
         public IRabbitMessageExchangeServiceBuilder ConfigExchange(Action<IRabbitMessageExchangeServiceBuilder> config) {
             var builder = new RabbitMessageExchangeBuilder();
@@ -43,7 +44,7 @@ namespace Magicube.MessageService.RabbitMQ {
 
             public abstract RabbitProducerEndpoint ProducerEndpoint { get; }
 
-            public abstract RabbitConsumerEndpoint ConsumerEndpoint { get; }
+            public abstract List<RabbitConsumerEndpoint> ConsumerEndpoints { get; }
 
             protected abstract IRabbitMessageServiceBuilder InternalConfigProducer(string name, Action<TProducer> config);
 
@@ -51,9 +52,16 @@ namespace Magicube.MessageService.RabbitMQ {
         }
 
         sealed class RabbitMessageExchangeBuilder : RabbitMessageServiceBuilder<RabbitExchangeProducerEndpoint, RabbitExchangeConsumerEndpoint>, IRabbitMessageExchangeServiceBuilder {
+            private readonly List< RabbitConsumerEndpoint> _rabbitConsumerEndpoints;
+
             private RabbitProducerEndpoint _rabbitProducerEndpoint;
-            private RabbitConsumerEndpoint _rabbitConsumerEndpoint;
             private RabbitConnectionConfig _rabbitConnectionConfig;
+
+            public RabbitMessageExchangeBuilder() {
+                _rabbitConsumerEndpoints = new List<RabbitConsumerEndpoint>();
+            }
+
+            public RabbitExchangeConfig Exchange { get; } = new();
 
             public override RabbitProducerEndpoint ProducerEndpoint {
                 get {
@@ -63,17 +71,18 @@ namespace Magicube.MessageService.RabbitMQ {
                     return _rabbitProducerEndpoint;
                 }
             }
-            public override RabbitConsumerEndpoint ConsumerEndpoint {
+            public override List<RabbitConsumerEndpoint> ConsumerEndpoints {
                 get {
                     if (_rabbitConnectionConfig != null) {
-                        _rabbitConsumerEndpoint.Connection = _rabbitConnectionConfig;
+                        _rabbitConsumerEndpoints.ForEach(x => x.Connection = _rabbitConnectionConfig);
                     }
-                    return _rabbitConsumerEndpoint;
+                    return _rabbitConsumerEndpoints;
                 }
             }
 
             protected override IRabbitMessageServiceBuilder InternalConfigProducer(string name, Action<RabbitExchangeProducerEndpoint> config) {
                 var endpoint = new RabbitExchangeProducerEndpoint(name);
+                endpoint.Exchange = Exchange;
                 config?.Invoke(endpoint);
                 _rabbitProducerEndpoint = endpoint;
                 return this;
@@ -81,8 +90,9 @@ namespace Magicube.MessageService.RabbitMQ {
 
             protected override IRabbitMessageServiceBuilder InternalConfigConsumer(string name, Action<RabbitExchangeConsumerEndpoint> config) {
                 var endpoint = new RabbitExchangeConsumerEndpoint(name);
+                endpoint.Exchange = Exchange;
                 config?.Invoke(endpoint);
-                _rabbitConsumerEndpoint = endpoint;
+                _rabbitConsumerEndpoints.Add(endpoint);
                 return this;
             }
 
@@ -104,9 +114,14 @@ namespace Magicube.MessageService.RabbitMQ {
         }
 
         sealed class RabbitMessageQueueBuilder : RabbitMessageServiceBuilder<RabbitQueueProducerEndpoint, RabbitQueueConsumerEndpoint>, IRabbitMessageQueueServiceBuilder {
+            private readonly List<RabbitConsumerEndpoint> _rabbitConsumerEndpoints;
+
             private RabbitProducerEndpoint _rabbitProducerEndpoint;
-            private RabbitConsumerEndpoint _rabbitConsumerEndpoint;
             private RabbitConnectionConfig _rabbitConnectionConfig;
+
+            public RabbitMessageQueueBuilder() {
+                _rabbitConsumerEndpoints = new();
+            }
 
             public override RabbitProducerEndpoint ProducerEndpoint {
                 get {
@@ -116,12 +131,12 @@ namespace Magicube.MessageService.RabbitMQ {
                     return _rabbitProducerEndpoint;
                 }
             }
-            public override RabbitConsumerEndpoint ConsumerEndpoint {
+            public override List<RabbitConsumerEndpoint> ConsumerEndpoints {
                 get {
                     if (_rabbitConnectionConfig != null) {
-                        _rabbitConsumerEndpoint.Connection = _rabbitConnectionConfig;
+                        _rabbitConsumerEndpoints.ForEach(x => x.Connection = _rabbitConnectionConfig);
                     }
-                    return _rabbitConsumerEndpoint;
+                    return _rabbitConsumerEndpoints;
                 }
             }
 
@@ -135,7 +150,7 @@ namespace Magicube.MessageService.RabbitMQ {
             protected override IRabbitMessageServiceBuilder InternalConfigConsumer(string name, Action<RabbitQueueConsumerEndpoint> config) {
                 var endpoint = new RabbitQueueConsumerEndpoint(name);
                 config?.Invoke(endpoint);
-                _rabbitConsumerEndpoint = endpoint;
+                _rabbitConsumerEndpoints.Add(endpoint);
                 return this;
             }
 
@@ -161,12 +176,13 @@ namespace Magicube.MessageService.RabbitMQ {
         IRabbitMessageServiceBuilder ConfigProducer(string name, Action<RabbitProducerEndpoint> config);
         IRabbitMessageServiceBuilder ConfigConsumer(string name, Action<RabbitConsumerEndpoint> config);
 
-        RabbitProducerEndpoint ProducerEndpoint { get; }
+        RabbitProducerEndpoint ProducerEndpoint        { get; }
 
-        RabbitConsumerEndpoint ConsumerEndpoint { get; }
+        List<RabbitConsumerEndpoint> ConsumerEndpoints { get; }
     }
 
     public interface IRabbitMessageExchangeServiceBuilder {
+        RabbitExchangeConfig Exchange { get; }
         IRabbitMessageExchangeServiceBuilder ConfigConnection(Action<RabbitConnectionConfig> conn);
         IRabbitMessageExchangeServiceBuilder ConfigProducer(string name, Action<RabbitExchangeProducerEndpoint> config);
         IRabbitMessageExchangeServiceBuilder ConfigConsumer(string name, Action<RabbitExchangeConsumerEndpoint> config);

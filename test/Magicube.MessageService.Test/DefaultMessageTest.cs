@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 using System.Threading;
 using Xunit;
 using Xunit.Abstractions;
+using Microsoft.Extensions.Hosting;
+using Moq;
+using Magicube.Core;
 
 namespace Magicube.MessageService.Test {
     public class DefaultMessageTest {
@@ -15,7 +18,11 @@ namespace Magicube.MessageService.Test {
 
         public DefaultMessageTest(ITestOutputHelper testOutputHelper) {
             _testOutputHelper = testOutputHelper;
+            var mockEnvironment = new Mock<IHostEnvironment>();
+
             ServiceProvider = new ServiceCollection()
+                .AddSingleton(mockEnvironment.Object)
+                .AddCore()
                 .AddLogging(builder => {
                     builder.AddProvider(new XUnitLoggerProvider(testOutputHelper));
                 })
@@ -24,6 +31,8 @@ namespace Magicube.MessageService.Test {
                 .AddConsumer<FooConsumer>(FooConsumer.Channel)
                 .AddSingleton(_testOutputHelper)
                 .BuildServiceProvider();
+
+            ServiceProvider.GetService<Application>().ServiceProvider = ServiceProvider;
         }
 
         [Fact]

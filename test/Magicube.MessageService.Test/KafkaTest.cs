@@ -8,6 +8,9 @@ using Xunit;
 using Xunit.Abstractions;
 using Magicube.TestBase;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Hosting;
+using Moq;
+using Magicube.Core;
 
 namespace Magicube.MessageService.Test {
     public class KafkaTest {
@@ -15,7 +18,10 @@ namespace Magicube.MessageService.Test {
         private readonly IServiceProvider ServiceProvider;
         public KafkaTest(ITestOutputHelper testOutputHelper) {
             _testOutputHelper = testOutputHelper;
+            var mockEnvironment = new Mock<IHostEnvironment>();
             ServiceProvider = new ServiceCollection()
+                .AddSingleton(mockEnvironment.Object)
+                .AddCore()
                 .AddLogging(builder => {
                     builder.AddProvider(new XUnitLoggerProvider(testOutputHelper));
                 })
@@ -31,6 +37,8 @@ namespace Magicube.MessageService.Test {
                 .AddConsumer<FooConsumer>(FooConsumer.Channel)
                 .AddSingleton(_testOutputHelper)
                 .BuildServiceProvider();
+
+            ServiceProvider.GetService<Application>().ServiceProvider = ServiceProvider;
         }
 
         [Fact]
@@ -52,7 +60,7 @@ namespace Magicube.MessageService.Test {
 
             for (int i = 0; i < 100; i++) {
                 producer.Produce(new FooEventMessage(), new MessageHeaders {
-                    ["topic"] = "foo"
+                    ["key"] = "foo"
                 });
             }
 
