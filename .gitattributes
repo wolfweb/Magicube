@@ -1,3 +1,4 @@
 * text=auto
 
 **/wwwroot/Scripts/* linguist-vendored
+*.html linguist-vendored
