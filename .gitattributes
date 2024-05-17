@@ -1,4 +1,6 @@
 * text=auto
 
+.cshtml linguist-language=C#
+
 **/wwwroot/Scripts/* linguist-vendored
 *.html linguist-vendored
