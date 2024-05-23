@@ -139,6 +139,8 @@ namespace Magicube.Core {
                 return ValueTypeDefaultValueMapping.GetOrAdd(type, x => {
                     if (x.IsEnum) return 0;
 
+                    if (x == typeof(string)) return null;
+
                     return Activator.CreateInstance(x);
                 });
             }

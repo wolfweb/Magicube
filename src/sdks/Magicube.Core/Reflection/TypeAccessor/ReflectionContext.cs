@@ -9,6 +9,7 @@ namespace Magicube.Core.Reflection {
         public ReflectionContext(Type type) {
             Parameters    = new List<IMemberExpressionModel>();
             Type          = type;
+            Name          = type.Name;
             TypeInfo      = type.GetTypeInfo();
             FullName      = type.FullName;
             Assembly      = type.Assembly;
